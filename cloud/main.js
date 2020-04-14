@@ -1,3 +1,2 @@
-Parse.Cloud.define('hello', function(req, res) {
-  return 'Hi';
-});
+// Cloud Code entry point
+

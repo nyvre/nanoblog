@@ -18,7 +18,8 @@ function addPostToDatabase(body) {
 	post = new Post();
 	post.set("body", body);
 	post.set("author", Parse.User.current());
-	post.save();
-	window.open("/", "_self");
+	post.save().then(function (result) {
+		window.open("/", "_self");
+		});
 }
 

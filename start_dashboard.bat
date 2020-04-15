@@ -1,1 +1,1 @@
-parse-dashboard --appId "nanoblogo" --masterKey "X6zaywgWgM8UOsyE2CF5f4WbRdHRA5Em" --serverURL "https://nanoblogo.herokuapp.com/"
+parse-dashboard --appId "nanoblogo" --masterKey "X6zaywgWgM8UOsyE2CF5f4WbRdHRA5Em" --serverURL "https://nanoblogo.herokuapp.com/parse"

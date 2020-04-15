@@ -2,6 +2,7 @@ function getPosts() {
 	Parse.initialize("nanoblogo");
 	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
 	var allPosts = new Parse.Query("posts");
+	allPosts.ascending("createdAt");
 	allPosts.include("author");
 	return allPosts.find().then(function(posts) {
 		let postsFormated = [];

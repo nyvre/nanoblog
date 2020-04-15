@@ -47,6 +47,9 @@ app.get('/test', function(req, res) {
 app.get('/sign_up', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/sign_up.html'));
 });
+app.get('/log_in', function(req, res) {
+  res.sendFile(path.join(__dirname, '/public/log_in.html'));
+});
 
 var port = process.env.PORT || 8080;
 var httpServer = require('http').createServer(app);

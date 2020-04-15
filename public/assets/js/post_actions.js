@@ -1,6 +1,6 @@
 function getPosts() {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "http://localhost:8080/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
 	var allPosts = new Parse.Query("posts");
 	allPosts.include("author");
 	return allPosts.find().then(function(posts) {
@@ -13,7 +13,7 @@ function getPosts() {
 }
 function addPostToDatabase(body) {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "http://localhost:8080/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
 	var Post = Parse.Object.extend("posts");
 	post = new Post();
 	post.set("body", body);

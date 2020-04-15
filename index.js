@@ -29,7 +29,7 @@ var app = express();
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
-
+app.use(express.static(path.join(__dirname, '/public/assets/js')))
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);

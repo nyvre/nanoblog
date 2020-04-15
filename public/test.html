@@ -4,11 +4,24 @@
     <title>Main Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-min.css" rel="stylesheet">
     <link href="/public/assets/css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
   </head>
 
   <body>
+  	<p id="currentUser"></p>
+  	<button onclick="logOut()">Wyloguj sie</button> 
+  	<button onclick="location.href='http://localhost:8080/log_in';">Zaloguj sie</button> 
+  	<button onclick="location.href='http://localhost:8080/sign_up';">Zarejestruj sie</button> 
   	<input type="text" id="new-post" name="new-post"></body>
   	<input type="submit" value="Dodaj post">
   	<p id="post" name="post">Post's text</p>
+  	<script type="text/javascript", src="/user_actions.js"></script>
+  	<script type="text/javascript">
+  		currentUser = document.getElementById("currentUser");
+  		currentUser.innerHTML = getCurrentUser();
+  		function logOut() {
+  			logOutCurrentUser();
+  		}
+  	</script>
   </body>
 </html>

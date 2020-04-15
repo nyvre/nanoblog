@@ -34,14 +34,9 @@ app.use(express.static(path.join(__dirname, '/public/assets/js')))
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
 
-// Parse Server plays nicely with the rest of your web routes
-app.get('/', function(req, res) {
-  res.status(200).send('Nanoblog test 123');
-});
-
 // There will be a test page available on the /test path of your server url
 // Remove this before launching your app
-app.get('/test', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/test.html'));
 });
 app.get('/sign_up', function(req, res) {

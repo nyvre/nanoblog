@@ -4,6 +4,7 @@
     <title>Main Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-min.css" rel="stylesheet">
     <link href="/public/assets/css/style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
   </head>
 
@@ -13,14 +14,37 @@
   	<button onclick="location.href='/log_in';">Zaloguj sie</button> 
   	<button onclick="location.href='/sign_up';">Zarejestruj sie</button> 
   	<input type="text" id="new-post" name="new-post"></body>
-  	<input type="submit" value="Dodaj post">
-  	<p id="post" name="post">Post's text</p>
+  	<button onclick="addPost()">Dodaj post</button> 
+  	<div id="app">
+  		<p v-for="post in posts" id="post" name="post">Author: {{post[0]}} Post: {{post[1]}} Created at: {{post[2]}}</p>
+  	</div>
   	<script type="text/javascript", src="/user_actions.js"></script>
+  	<script type="text/javascript", src="/post_actions.js"></script>
   	<script type="text/javascript">
+  		var app = new Vue({
+	        el: '#app',
+	        data: {
+	          posts: []
+	        },
+	        methods: {
+	        	populatePostsData: function () {
+	        		var Promise = getPosts()
+	        			.then(function (success) {
+	        				app.posts = success.reverse();
+	        			})
+	        	}
+	        }
+      	});
+  		app.populatePostsData();
+  		console.log(app.posts);
   		currentUser = document.getElementById("currentUser");
   		currentUser.innerHTML = getCurrentUser();
   		function logOut() {
   			logOutCurrentUser();
+  		}
+  		function addPost() {
+  			let postBody = document.getElementById("new-post").value;
+  			addPostToDatabase(postBody);
   		}
   	</script>
   </body>

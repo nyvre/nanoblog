@@ -1,6 +1,6 @@
 function createUserInDatabase(username, password) {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com:8080/parse";
 	var user = new Parse.User();
 	user.set("username", username);
 	user.set("password", password);
@@ -14,7 +14,7 @@ function createUserInDatabase(username, password) {
 
 function logInUser (username, password) {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com:8080/parse";
 	var user = new Parse.User();
 	user.set("username", username);
 	user.set("password", password);
@@ -28,19 +28,17 @@ function logInUser (username, password) {
 
 function logOutCurrentUser() {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com:8080/parse";
 	Parse.User.logOut()
 		.then(function (success) {
 			window.open("/", "_self");
 	}, function(err) {
 	console.error(err);
 	});
-
 }
 function getCurrentUser() {
 	Parse.initialize("nanoblogo");
-	Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+	Parse.serverURL = "https://nanoblogo.herokuapp.com:8080/parse";
 	return Parse.User.current().getUsername();
-
 }
 

@@ -13,9 +13,9 @@
   	<button onclick="logOut()">Wyloguj sie</button> 
   	<button onclick="location.href='/log_in';">Zaloguj sie</button> 
   	<button onclick="location.href='/sign_up';">Zarejestruj sie</button> 
-  	<input type="text" id="new-post" name="new-post"></body>
-  	<button onclick="addPost()">Dodaj post</button> 
   	<div id="app">
+  		<input type="text" id="new-post" name="new-post"></body>
+  		<button v-on:click="addPost">Dodaj post</button> 
   		<p v-for="post in posts" id="post" name="post">Author: {{post[0]}} Post: {{post[1]}} Created at: {{post[2]}}</p>
   	</div>
   	<script type="text/javascript", src="/user_actions.js"></script>
@@ -24,27 +24,42 @@
   		var app = new Vue({
 	        el: '#app',
 	        data: {
-	          posts: []
+	          posts: [],
+	          user: {}
 	        },
 	        methods: {
 	        	populatePostsData: function () {
-	        		var Promise = getPosts()
+	        		getAndFormatPosts()
 	        			.then(function (success) {
 	        				app.posts = success.reverse();
 	        			})
+	        	},
+	        	addPost: function() {
+	        		let postBody = document.getElementById("new-post").value;
+  					addPostToDatabase(postBody).then(() => {this.populatePostsData()});
+	        	},
+	        	getUsername: function() {
+	        		app.user = getCurrentUser();
+	        		if (user === null) {
+
+	        		} else {
+
+	        		}
+
+	        	},
+	        	checkForNewPosts: function() {
+	        		setInterval(this.populatePostsData, 10000);
 	        	}
 	        }
       	});
   		app.populatePostsData();
+  		app.checkForNewPosts();
   		currentUser = document.getElementById("currentUser");
   		currentUser.innerHTML = getCurrentUser();
   		function logOut() {
   			logOutCurrentUser();
   		}
-  		function addPost() {
-  			let postBody = document.getElementById("new-post").value;
-  			addPostToDatabase(postBody);
-  		}
+
   	</script>
   </body>
 </html>

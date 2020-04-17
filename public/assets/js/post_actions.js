@@ -22,7 +22,10 @@ var formatPosts = function (posts) {
 	return new Promise(function(resolve, reject) {
 		let postsFormated = [];
 		for (post of posts) {
-			postsFormated.push([post.get("author").get("username"), post.get("body"), post.get("createdAt")]);
+			postsFormated.push({
+				"author": post.get("author").get("username"), 
+				"body":  post.get("body"), 
+				"createdAt": post.get("createdAt")});
 		}
 		return resolve(postsFormated);
 	});

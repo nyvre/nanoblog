@@ -17,6 +17,8 @@ var api = new ParseServer({
   appId: process.env.APP_ID || 'nanoblogo',
   masterKey: process.env.MASTER_KEY || 'X6zaywgWgM8UOsyE2CF5f4WbRdHRA5Em', //Add your master key here. Keep it secret!
   serverURL: process.env.SERVER_URL || 'http://localhost:8080/parse',  // Don't forget to change to https if needed
+  restApiKey: process.env.REST_API || 'restApiKey',
+
   liveQuery: {
     classNames: ["Posts", "Comments"] // List of classes to support for query subscriptions
   }
@@ -30,6 +32,7 @@ var app = express();
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/assets/js')))
+app.use(express.static(path.join(__dirname, '/public/assets/vue')))
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);

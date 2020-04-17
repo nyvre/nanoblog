@@ -5,61 +5,90 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-min.css" rel="stylesheet">
     <link href="/public/assets/css/style.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
   </head>
 
   <body>
-  	<p id="currentUser"></p>
-  	<button onclick="logOut()">Wyloguj sie</button> 
-  	<button onclick="location.href='/log_in';">Zaloguj sie</button> 
-  	<button onclick="location.href='/sign_up';">Zarejestruj sie</button> 
   	<div id="app">
-  		<input type="text" id="new-post" name="new-post"></body>
-  		<button v-on:click="addPost">Dodaj post</button> 
-  		<p v-for="post in posts" id="post" name="post">Author: {{post[0]}} Post: {{post[1]}} Created at: {{post[2]}}</p>
+	  	<p id="currentUser"></p>
+	  	<button onclick="logOut()">Wyloguj sie</button> 
+	  	<router-link to="/log_in">Zaloguj sie</router-link>
+	  	<button onclick="location.href='/sign_up';">Zarejestruj sie</button> 
+			<log-in ref="LogIn"/>
+			<main-page ref="MainPage"/>
+  		<router-view/>>
   	</div>
   	<script type="text/javascript", src="/user_actions.js"></script>
   	<script type="text/javascript", src="/post_actions.js"></script>
   	<script type="text/javascript">
+  		var LogIn = Vue.extend({template: 
+  			`<div><input type="text" id="username" name="username"><br>
+  			<input type="password" id="password" name="password"><br>
+     		<button onclick="logIn()">Zaloguj sie</button></div>`,
+        methods: {
+      		logIn () {
+		        let username = document.getElementById("username").value;
+		        let password = document.getElementById("password").value;
+		        logInUser(username, password);
+		      }
+        }
+  		});
+
+  		var MainPage = Vue.extend({template: 
+  			`<div id="MainPage"><input type="text" id="new-post" name="new-post"></body>
+  			<button v-on:click="addPost">Dodaj post</button>
+  			<p v-for="(post, index) in posts" :key="index" id="post" name="post">Author: {{post.author}} Post: {{post.body}} Created at: {{post.createdAt}}</p></div>`,
+  			data() {
+	          return {
+	          	posts: []
+	      		}
+        },
+        methods: {
+        	populatePostsData: function () {
+        		getAndFormatPosts()
+        			.then(function (success) {
+        				app.$refs.MainPage.posts = success.reverse();
+        				/* #TODO
+        				 * Z jakiegos powodu nie mozna dostac sie do tablicy posts poprzez this.posts tylko trzeba przez parenta
+        				*/
+        			})
+        	},
+        	addPost: function() {
+        		let postBody = document.getElementById("new-post").value;
+					addPostToDatabase(postBody).then(() => {this.populatePostsData()});
+        	},
+        	checkForNewPosts: function() {
+        		setInterval(this.populatePostsData, 10000);
+        	}
+        }
+  		});
+
+
+	  	var routes = [
+	  		{path: "/log_in", component: LogIn},
+	  		{path: "/", component: MainPage}];
+	  	const router = new VueRouter({
+				 routes
+			});
+
+
   		var app = new Vue({
 	        el: '#app',
-	        data: {
-	          posts: [],
-	          user: {}
-	        },
-	        methods: {
-	        	populatePostsData: function () {
-	        		getAndFormatPosts()
-	        			.then(function (success) {
-	        				app.posts = success.reverse();
-	        			})
-	        	},
-	        	addPost: function() {
-	        		let postBody = document.getElementById("new-post").value;
-  					addPostToDatabase(postBody).then(() => {this.populatePostsData()});
-	        	},
-	        	getUsername: function() {
-	        		app.user = getCurrentUser();
-	        		if (user === null) {
-
-	        		} else {
-
-	        		}
-
-	        	},
-	        	checkForNewPosts: function() {
-	        		setInterval(this.populatePostsData, 10000);
-	        	}
+	        router,
+	        components: {
+	        	"main-page": MainPage,
+	        	"log-in": LogIn
 	        }
-      	});
-  		app.populatePostsData();
-  		app.checkForNewPosts();
+      	}).$mount('#app')
+  		Vue.use(VueRouter);
+  		app.$refs.MainPage.populatePostsData();
+  		app.$refs.MainPage.checkForNewPosts();
   		currentUser = document.getElementById("currentUser");
   		currentUser.innerHTML = getCurrentUser();
   		function logOut() {
   			logOutCurrentUser();
   		}
-
   	</script>
   </body>
 </html>

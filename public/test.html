@@ -3,21 +3,33 @@
   <head>
     <title>Main Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-min.css" rel="stylesheet">
-    <link href="/public/assets/css/style.css" rel="stylesheet">
+	<link href="public/assets/css/style.css" type="text/css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
 
   <body>
-  	<p id="currentUser"></p>
-  	<button onclick="logOut()">Wyloguj sie</button> 
-  	<button onclick="location.href='/log_in';">Zaloguj sie</button> 
-  	<button onclick="location.href='/sign_up';">Zarejestruj sie</button> 
-  	<input type="text" id="new-post" name="new-post"></body>
-  	<button onclick="addPost()">Dodaj post</button> 
+	<div id='root'>
+	<header class='header'>
+  	<div id="currentUser"></div>
+  	<button onclick="logOut()" class = 'myButton'>Wyloguj sie</button> 
+  	<button onclick="location.href='/log_in';" class = 'myButton'>Zaloguj sie</button> 
+  	<button onclick="location.href='/sign_up';" class = 'myButton'>Zarejestruj sie</button> 
+	</header>
+	<div style='bottom:0px;align-items:center;display: flex;justify-content: center;'>
+	<textarea type="text" id="new-post" name="new-post" class='textbox' wrap="soft">
+	</textarea>
+  	<button onclick="addPost()" class="fa fa-send" style="color:green;background:#ffffe6;border-radius:10px"></button> 
+	</div>
   	<div id="app">
-  		<p v-for="post in posts" id="post" name="post">Author: {{post[0]}} Post: {{post[1]}} Created at: {{post[2]}}</p>
+  		<div v-for="post in posts" id="post" name="post" class='chat'>
+		<p class = 'chatinfo'><b>{{post[0]}}</b>  {{post[2]}}</p>
+		<p class='messagebox'>{{post[1]}}</p>
+		</div>		
   	</div>
+	</div>
+	</body>
   	<script type="text/javascript", src="/user_actions.js"></script>
   	<script type="text/javascript", src="/post_actions.js"></script>
   	<script type="text/javascript">
@@ -37,7 +49,7 @@
       	});
   		app.populatePostsData();
   		currentUser = document.getElementById("currentUser");
-  		currentUser.innerHTML = getCurrentUser();
+  		currentUser.innerHTML = 'Jesteś zalogowany jako ' + getCurrentUser();
   		function logOut() {
   			logOutCurrentUser();
   		}

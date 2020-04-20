@@ -1,6 +1,16 @@
 <template>
   <div>
-    <p v-bind:key='post.objectId' v-for='post in posts' id='post' name='post'>Author: {{post.author}} Post: {{post.body}} Created at: {{post.createdAt}}</p>
+    <form>
+      <input type="text" id="post-body">
+      <input type="submit" value="Dodaj post" v-on:click="addPost">
+    </form>
+    <div v-bind:key='post.objectId' v-for='post in posts' id='post' name='post'>
+      Author: {{post.author}} Post: {{post.body}} Created at: {{post.createdAt}}
+      <br>
+      <div v-if="username === post.author">
+        <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +23,7 @@
         posts: []
       }
     },
+    props: ["username"],
     methods : {
       getPosts () {
         return new Promise(function (resolve) {
@@ -29,9 +40,11 @@
           let postsFormated = [];
           for (let post of posts) {
             postsFormated.push({
+              "objectId": post.id, 
               "author": post.get("author").get("username"), 
               "body":  post.get("body"), 
-              "createdAt": post.get("createdAt")})
+              "createdAt": post.get("createdAt")
+            })
           }
           return resolve(postsFormated);
         });
@@ -48,11 +61,8 @@
       },
       populatePostsData () {
         this.getAndFormatPosts()
-          .then((success) => {
-            this.posts = success.reverse();
-            /* #TODO
-             * Z jakiegos powodu nie mozna dostac sie do tablicy posts poprzez this.posts tylko trzeba przez parenta
-            */
+          .then((retrieviedPosts) => {
+            this.posts = retrieviedPosts.reverse();
           })
       },
       addPostToDatabase(body) {
@@ -67,14 +77,27 @@
         });
       },
       addPost () {
-        let postBody = document.getElementById("new-post").value;
+        let postBody = document.getElementById("post-body").value;
         this.addPostToDatabase(postBody).then(() => {this.populatePostsData()});
+      },
+      deletePost(objectId) {
+        Parse.initialize("nanoblogo");
+        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+        var Post = Parse.Object.extend("posts");
+        var query = new Parse.Query(Post);
+        query.get(objectId)
+          .then((post) => {
+            post.destroy()
+              .then(this.populatePostsData());
+            alert("Post został usunięty");
+            },() => {
+            alert("Post nie istnieje");
+            this.populatePostsData()
+          });
       },
       checkForNewPosts () {
         setInterval(this.populatePostsData, 10000);
       }
-    },
-    components: {
     },
     mounted () {
       this.populatePostsData();

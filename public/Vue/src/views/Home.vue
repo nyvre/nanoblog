@@ -1,10 +1,7 @@
 <template>
   <div id ="Home">
-    <form>
-      <input type="text">
-      <input type="submit" value="Dodaj post">
-    </form>
-    <Posts />
+    <Posts v-bind:username="username"/>
+    }
   </div>
 </template>
 
@@ -15,5 +12,6 @@ export default {
   components: {
     Posts
   }, 
+  props: ['username']
 }
 </script>

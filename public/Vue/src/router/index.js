@@ -11,13 +11,14 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    props: {prop: "username"}
   },
   {
     path: '/login',
     name: 'LogInPage',
     component: LogInPage,
-    props: {prop: "userId"}
+    props: {prop: "username"}
   },
   {
     path: '/signup',

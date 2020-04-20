@@ -12,10 +12,7 @@
   import Parse from 'parse'
   export default {
     name: 'LogInPage',
-    props: ["userId"],
-    created () {
-      this.$emit('user-logged-in', 'gg');
-    },
+    props: ["username"],
     methods: {
       logIn () {
         let username = document.getElementById("username").value;
@@ -26,9 +23,7 @@
         user.set("username", username);
         user.set("password", password);
         user.logIn()
-          .then(() => {
-            this.$emit("user-logged-in", Parse.User.current().getUsername());
-          })
+          .then(this.$emit("user-logged-in"))
           .then(this.$router.push("/"));
       }
     }

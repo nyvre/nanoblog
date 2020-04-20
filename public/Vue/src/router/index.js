@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import About from '../views/About.vue'
-import LogIn from '../views/LogIn.vue'
+import LogInPage from '../views/LogInPage.vue'
 import SignUp from '../views/SignUp.vue'
 
 Vue.use(VueRouter)
@@ -15,8 +15,9 @@ Vue.use(VueRouter)
   },
   {
     path: '/login',
-    name: 'LogIn',
-    component: LogIn
+    name: 'LogInPage',
+    component: LogInPage,
+    props: {prop: "userId"}
   },
   {
     path: '/signup',

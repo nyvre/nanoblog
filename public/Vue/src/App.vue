@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <div id="nav">
+      {{userId}}
       <NavigationBar />
     </div>
-    <router-view/>
+    <router-view v-bind:userId="userId" v-on:user-logged-in="updateUser"/>
   </div>
 </template>
 
@@ -13,6 +14,16 @@
     name: "app",
     components: {
       NavigationBar,
+    },
+    data() {
+      return {
+        userId: "gd"
+      }
+    },
+    methods: {
+      updateUser(newUser) {
+        this.userId = newUser;
+      }
     },
   }
 </script>

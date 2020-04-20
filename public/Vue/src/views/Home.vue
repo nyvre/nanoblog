@@ -1,5 +1,4 @@
 <template>
-  <div id="app">
   <div id ="Home">
     <form>
       <input type="text">
@@ -7,7 +6,6 @@
     </form>
     <Posts />
   </div>
-</div>
 </template>
 
 <script>

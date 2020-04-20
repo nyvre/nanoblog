@@ -31,8 +31,7 @@ var app = express();
 
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public/assets/js')))
-app.use(express.static(path.join(__dirname, '/public/assets/vue')))
+app.use('/js', express.static(path.join(__dirname, '/public/js/')))
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
@@ -40,13 +39,7 @@ app.use(mountPath, api);
 // There will be a test page available on the /test path of your server url
 // Remove this before launching your app
 app.get('/', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public/test.html'));
-});
-app.get('/sign_up', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public/sign_up.html'));
-});
-app.get('/log_in', function(req, res) {
-  res.sendFile(path.join(__dirname, '/public/log_in.html'));
+  res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 var port = process.env.PORT || 8080;

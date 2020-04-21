@@ -4,7 +4,9 @@
     <title>Main Page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/pure/0.6.0/grids-min.css" rel="stylesheet">
 	<link href="public/assets/css/style.css" type="text/css" rel="stylesheet">
+	<script src="https://unpkg.com/vuex@3.2.0/dist/vuex.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
@@ -57,6 +59,16 @@
   			let postBody = document.getElementById("new-post").value;
   			addPostToDatabase(postBody);
   		}
+		const store = new Vuex.Store({
+		state: {
+			authorized: false
+		},
+		mutations: {
+			setAuthorization (state, value) {
+				state.authorized = value
+		}
+		}
+		})
   	</script>
   </body>
 </html>

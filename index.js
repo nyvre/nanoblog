@@ -1,9 +1,10 @@
-// Example express application adding the parse-server module to expose Parse
+//[0]+-/ Example express application adding the parse-server module to expose Parse
 // compatible API routes.
 
 var express = require('express');
 var ParseServer = require('parse-server').ParseServer;
 var path = require('path');
+var https = require('https')
 
 var databaseUri = process.env.DATABASE_URI || process.env.MONGODB_URI;
 
@@ -40,6 +41,46 @@ app.use(mountPath, api);
 // Remove this before launching your app
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, '/public/index.html'));
+});
+
+app.get(/api\/*/, function(req, res) {
+  var parsePath = '/parse' + req.originalUrl.substring(4);
+  if (req.originalUrl.substring(0, 4) === '/api') {
+    if (req.originalUrl.length <= 5) {
+      console.log("here");
+       res.status(200).send('Instrukcja API będzie tutaj');
+    } else {
+      const options = {
+        hostname: 'nanoblogo.herokuapp.com',
+        port: 443,
+        method: 'GET',
+        path: parsePath,
+        headers: {
+        'X-Parse-Application-Id': 'nanoblogo',
+        'X-Parse-REST-API-Key': 'restApiKey',
+        json: true
+        },
+      } 
+      var req = https.request(options, function(response) {
+        response.setEncoding('utf8');
+        var allData = ''
+        response.on('data', function (data) {
+          allData += data
+        });
+        response.on('end', function () {
+          res.status(200).json(JSON.parse(allData));
+        })
+      });
+
+      req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+      });
+      req.end();
+    }
+  } else {
+    res.status(400).send('Bad API request');
+  }
+
 });
 
 var port = process.env.PORT || 8080;

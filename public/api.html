@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>API</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript">
+      var https = require('https');
+
+      const options = {
+        hostname: 'nanoblogo.herokuapp.com',
+        port: 8080,
+        method: 'GET',
+        path: parsePath,
+        headers: {
+        'X-Parse-Application-Id': 'nanoblogo',
+        'X-Parse-REST-API-Key': 'restApiKey',
+        },
+      } 
+
+      var req = https.request(options, function(res) {
+        console.log('STATUS: ' + res.statusCode);
+        console.log('HEADERS: ' + JSON.stringify(res.headers));
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+          console.log('BODY: ' + chunk);
+        });
+      });
+
+      req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+      });
+
+      // write data to request body
+      req.write('data\n');
+      req.write('data\n');
+      req.end();
+    </script>
+  </body>
+</html>

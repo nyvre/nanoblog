@@ -26,7 +26,7 @@ var api = new ParseServer({
 // javascriptKey, restAPIKey, dotNetKey, clientKey
 
 var app = express();
-
+app.use(express.static(path.join(__dirname, '/public/assets/css')))
 // Serve static assets from the /public folder
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/assets/js')))

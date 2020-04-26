@@ -1,11 +1,12 @@
 <template>
   <div>
-    <form>
-      <input type="text" id="post-body">
-      <input type="submit" value="Dodaj post" v-on:click="addPost">
-    </form>
-    <div v-bind:key='post.objectId' v-for='post in posts' id='post' name='post'>
-      Author: {{post.author}} Post: {{post.body}} Created at: {{post.createdAt}}
+    <div style='bottom:0px;align-items:center;display: flex;justify-content: center;'>
+      <textarea type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
+      <input type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
+    </div>
+    <div v-bind:key='post.objectId' v-for='post in posts' id='post' name='post' class='chat'>
+      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}}</p>  
+      <p class='messagebox'>{{post.body}}</p>
       <br>
       <div v-if="username === post.author">
         <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">
@@ -77,7 +78,9 @@
         });
       },
       addPost () {
-        let postBody = document.getElementById("post-body").value;
+        let post = document.getElementById("post-body");
+        let postBody = post.value;
+        post.value = "";
         this.addPostToDatabase(postBody).then(() => {this.populatePostsData()});
       },
       deletePost(objectId) {
@@ -106,5 +109,38 @@
   }
 </script>
 
-<style>
+<style scoped>
+  .messagebox {
+      border-radius: 5px;
+      display: inline-block;
+      padding: 10px;
+      font-weight: lighter;
+      font-size: small;
+  }
+  .chatinfo{
+    font-size: small;
+    padding: 10px;
+  }
+  .chat{
+    margin: 50px;
+    background: #ccffcc;
+      border-radius: 5px;
+      display: compact;
+      padding: 20px;
+      font-weight: lighter;
+      font-size: small;
+  }
+  .textbox {
+    margin: 50px;
+      height: 20px;
+      border: 1px solid ;
+      background-color: white;
+      font-size: 16px;
+    width: 2000px;
+    padding:0;
+    border-radius:4px;
+  }
+  .author {
+    font-weight: bold
+  }
 </style>

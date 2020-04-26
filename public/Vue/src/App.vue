@@ -1,8 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      {{username}}
-      <NavigationBar />
+      <NavigationBar v-bind:username="username"/>
     </div>
     <router-view v-bind:username="username" v-on:user-logged-in="updateUser"/>
   </div>
@@ -47,4 +46,13 @@
 </script>
 
 <style>
+  * {
+    margin: 0;
+    font-family: tahoma, sans-serif;
+    box-sizing: border- box;
+  }
+  body{
+    background: #ffffe6;
+    padding: 10px;
+  }
 </style>

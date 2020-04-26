@@ -1,12 +1,19 @@
 <template>
-  <header class="header">
-      <div v-if="username!=''" id="currentUser">Jesteś zalogowany jako {{username}}</div>
-      <router-link class = 'myButton' to="/">Home</router-link> |
-      <router-link class = 'myButton' to="/login">Zaloguj się</router-link> |
-      <router-link class = 'myButton' to="/signup">Zarejestruj się</router-link> |
-      <router-link class = 'myButton' to="/about">About</router-link> |
-      <button class='myButton' v-on:click="logOut">Wyloguj sie</button>
-  </header>
+  <div class="header">
+      <div class ='innerheader'>
+        <div class ='logo_container'>
+          <h1>Nano<span>Blog</span></h1>
+        </div>
+      <ul class='navigation'>
+      <a v-if="username!=''" id="currentUser"><li>Jesteś zalogowany jako {{username}}</li></a>
+      <router-link to="/"><li>Home</li></router-link>
+      <router-link to="/login"><li>Zaloguj się</li></router-link>
+      <router-link to="/signup"><li>Zarejestruj się</li></router-link>
+      <router-link to="/about"><li>About</li></router-link>
+      <a v-on:click="logOut"><li>Wyloguj sie</li></a>
+      </ul>
+      </div>
+  </div>
 </template>
 
 <script>
@@ -26,36 +33,68 @@ export default {
 </script>
 <style scoped>
   .header{
-    top: 0px;
     width: 100%;
     background: #006666;
-    border: 2px solid #CCC;
-    height:70px;
+    display:block;
+    height:80px;
     margin: 0px auto;
-    text-align: right;
   }
-  .myButton {
-    box-shadow: 0px 10px 14px -7px #3e7327;
-    background:linear-gradient(to bottom, #77b55a 5%, #72b352 100%);
-    background-color:#77b55a;
-    border-radius:4px;
-    border:1px solid #4b8f29;
-    display:inline-block;
-    cursor:pointer;
-    color:#ffffff;
-    font-family:Arial;
-    font-size:13px;
-    font-weight:bold;
-    padding:6px 12px;
-    text-decoration:none;
-    text-shadow:0px 1px 0px #5b8a3c;
+    .innerheader{
+    width: 1000px;
+    display:block;
+    height:100%;
+    margin: 0px auto;
   }
-  .myButton:hover {
-    background:linear-gradient(to bottom, #72b352 5%, #77b55a 100%);
-    background-color:#72b352;
+  .logo_container{
+    height: 100%;
+    display:table;
+    float:left;
   }
-  .myButton:active {
-    position:relative;
-    top:1px;
+  .logo_container h1{
+    color:white;
+    height:100%;
+    display:table-cell;
+    vertical-align:middle;
+    font-family:'Montserrat', sans-serif;
+    font-size:32px;
+    font-weight: 200;
+  }
+  .logo_container h1 span{
+  font-weight: 800;
+  }
+  .navigation{
+    float:right;
+    height:100%;
+  }
+  .navigation a{
+    height:100%;
+    display:table;
+    float:left;
+    padding:0px 20px;
+  }
+  .navigation router-link{
+    height:100%;
+    display:table;
+    float:left;
+    padding:0px 20px;
+  }
+  .navigation router-link li {
+    display:table-cell;
+    vertical-align:middle;
+    height:100%;
+    color:white;
+    
+    font-size:16px;
+  }
+    .navigation a li{
+    display:table-cell;
+    vertical-align:middle;
+    height:100%;
+    color:white;
+    font-family:'Montserrat', sans-serif;
+    font-size:16px;
+  }
+  .navigation a:last-child{
+    padding-right:0px;
   }
 </style>

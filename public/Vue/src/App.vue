@@ -46,13 +46,10 @@
 </script>
 
 <style>
-  * {
-    margin: 0;
-    font-family: tahoma, sans-serif;
-    box-sizing: border- box;
-  }
-  body{
-    background: #ffffe6;
-    padding: 10px;
-  }
+  body {
+  background:#ecf2f9;
+  margin:0px;
+  font-family: 'Ubuntu', sans-serif;
+	background-size: 100% 110%;
+}
 </style>

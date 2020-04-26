@@ -28,7 +28,7 @@ export default {
   .header{
     top: 0px;
     width: 100%;
-    background:#009900;
+    background: #006666;
     border: 2px solid #CCC;
     height:70px;
     margin: 0px auto;

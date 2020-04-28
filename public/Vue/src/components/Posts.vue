@@ -1,16 +1,16 @@
 <template>
   <div>
     <div style='bottom:0px;align-items:center;display: flex;justify-content: center;'>
-      <a v-if="username!=''" id="currentUser"><li>Jesteś zalogowany jako {{username}}</li></a>
-      <textarea type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
-      <input type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
+      <a v-if="username!=''" id="currentUser"><li> Cześć, {{username}}</li></a>
+      <input v-if="username!=''" placeholder= "Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!" type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
+      <input v-if="username!=''" type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
     </div>
     <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
       <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: {{post.points}} <input type="submit" v-on:click="addPoint(post.objectId)" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px" value="+"></p>
-      <p class='messagebox'>{{post.body}}</p>
+      <p class='messagebox' >{{post.body}}</p>
       <p> {{post.comments}} </p>
-      <textarea type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
-      <input type="submit" v-on:click="addComment(post.objectId)" class="add-comment-btn" style="color:green;background:#ffffe6;border-radius:10px" >
+      <textarea v-if="username!=''" type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
+      <input v-if="username!=''" type="submit" v-on:click="addComment(post.objectId)" class="add-comment-btn" style="color:green;background:#ffffe6;border-radius:10px" >
       <br>
       <div v-if="username === post.author">
         <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">
@@ -221,12 +221,16 @@
   .textbox {
     margin: 50px;
       height: 20px;
-      border: 1px solid ;
-      background-color: white;
+      border: 1px solid #888 ;
       font-size: 16px;
     width: 2000px;
     padding:0;
-    border-radius:4px;
+    -moz-box-shadow: inset -3px -3px 10px #eee;
+    -webkit-box-shadow: inset -3px -3px 10px #eee;
+    box-shadow: inset -3px -3px 10px #eee;
+   border-radius: 15px;
+   resize: none;
+   
   }
   .author {
     font-weight: bold

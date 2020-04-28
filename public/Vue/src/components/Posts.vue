@@ -1,6 +1,7 @@
 <template>
   <div>
     <div style='bottom:0px;align-items:center;display: flex;justify-content: center;'>
+      <a v-if="username!=''" id="currentUser"><li>Jesteś zalogowany jako {{username}}</li></a>
       <textarea type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
       <input type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
     </div>

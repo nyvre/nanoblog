@@ -5,12 +5,11 @@
           <h1>Nano<span>Blog</span></h1>
         </div>
       <ul class='navigation'>
-      <a v-if="username!=''" id="currentUser"><li>Jesteś zalogowany jako {{username}}</li></a>
       <router-link to="/"><li>Home</li></router-link>
-      <router-link to="/login"><li>Zaloguj się</li></router-link>
-      <router-link to="/signup"><li>Zarejestruj się</li></router-link>
+      <router-link to="/login" v-if="username===''"><li>Zaloguj się</li></router-link>
+      <router-link to="/signup"  v-if="username===''"><li>Zarejestruj się</li></router-link>
       <router-link to="/about"><li>About</li></router-link>
-      <a v-on:click="logOut"><li>Wyloguj sie</li></a>
+      <a v-on:click="logOut" v-if="username!=''"><li>Wyloguj sie</li></a>
       </ul>
       </div>
   </div>
@@ -38,9 +37,10 @@ export default {
     display:block;
     height:80px;
     margin: 0px auto;
+    text-align:center;
   }
     .innerheader{
-    width: 1000px;
+    max-width: 1000px;
     display:block;
     height:100%;
     margin: 0px auto;
@@ -56,7 +56,7 @@ export default {
     display:table-cell;
     vertical-align:middle;
     font-family:'Montserrat', sans-serif;
-    font-size:32px;
+    font-size:28px;
     font-weight: 200;
   }
   .logo_container h1 span{
@@ -65,18 +65,19 @@ export default {
   .navigation{
     float:right;
     height:100%;
+    display:table
   }
   .navigation a{
     height:100%;
     display:table;
     float:left;
-    padding:0px 20px;
+    padding:0px 14px;
   }
   .navigation router-link{
     height:100%;
     display:table;
     float:left;
-    padding:0px 20px;
+    padding:0px 14px;
   }
   .navigation router-link li {
     display:table-cell;
@@ -84,7 +85,7 @@ export default {
     height:100%;
     color:white;
     
-    font-size:16px;
+    font-size:10px;
   }
     .navigation a li{
     display:table-cell;
@@ -92,7 +93,7 @@ export default {
     height:100%;
     color:white;
     font-family:'Montserrat', sans-serif;
-    font-size:16px;
+    font-size:15px;
   }
   .navigation a:last-child{
     padding-right:0px;

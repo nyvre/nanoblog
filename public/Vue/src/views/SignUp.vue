@@ -7,7 +7,7 @@
       <h3>Username: </h3>
       <input placeholder = 'Username' type="text" id="username">
       <h3>Password: </h3>
-      <input placeholder = 'Password'  type="text" id="password">
+      <input placeholder = 'Password'  type="password" id="password">
       <br>
       <div class ='parent'>
       <input class='login-button' type="submit" value="Sign up" v-on:click="createUserInDatabase">

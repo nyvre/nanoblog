@@ -6,7 +6,7 @@
       <input type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
     </div>
     <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
-      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}}</p>  
+      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: {{post.points}} <input type="submit" v-on:click="addPoint(post.objectId)" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px" value="+"></p>
       <p class='messagebox'>{{post.body}}</p>
       <p> {{post.comments}} </p>
       <textarea type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
@@ -45,15 +45,14 @@
         return new Promise(function(resolve) {
           let postsFormated = [];
           for (let post of posts) {
-            self.getAndFormatComments(post.id)
-            .then((comments) => {
-              console.log(post.id);
-              console.log(comments);
+            Promise.all([self.getAndFormatComments(post.id), self.getPoints(post.id)])
+            .then(([comments, points]) => {
               postsFormated.push({
                 "objectId": post.id, 
                 "author": post.get("author").get("username"), 
                 "body": post.get("body"), 
                 "comments": comments,
+                "points": points,
                 "createdAt": post.get("createdAt")
               })
             })
@@ -109,7 +108,6 @@
       },
       addCommentToDatabase(body, parentPostId) {
         return new Promise(function(resolve) {
-          console.log(parentPostId);
           Parse.initialize("nanoblogo");
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
           var Comment = Parse.Object.extend("Comment");
@@ -126,6 +124,29 @@
         let commentBody = comment.value;
         comment.value = "";
         this.addCommentToDatabase(commentBody, parentPostId).then(() => {this.populatePostsData()});
+      },
+      getPoints (postId) {
+        return new Promise(function (resolve) {
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var Point = new Parse.Query("Point");
+          var Post = Parse.Object.extend('posts');
+          Point.equalTo("parentPost", new Post({id : postId}));
+          return resolve(Point.count());
+        });
+      },
+      addPoint (parentPostId) {
+        return new Promise(function (resolve) {
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var Point = Parse.Object.extend("Point");
+          var Post = Parse.Object.extend("posts");
+          //var User = Parse.Object.extend("User");
+          let point = new Point();
+          point.set("author", Parse.User.current());
+          point.set("parentPost", new Post({id : parentPostId}));
+          return(resolve(point.save()));
+        });
       },
       populatePostsData () {
         this.getAndFormatPosts()

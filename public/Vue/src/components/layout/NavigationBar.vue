@@ -9,7 +9,7 @@
       <router-link to="/login" v-if="username===''"><li>Zaloguj się</li></router-link>
       <router-link to="/signup"  v-if="username===''"><li>Zarejestruj się</li></router-link>
       <router-link to="/about"><li>About</li></router-link>
-      <a v-on:click="logOut" v-if="username!=''"><li>Wyloguj sie</li></a>
+      <a href="#/" v-on:click="logOut" v-if="username!=''"><li>Wyloguj się</li></a>
       </ul>
       </div>
   </div>
@@ -24,7 +24,7 @@ export default {
       Parse.initialize("nanoblogo");
       Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
       Parse.User.logOut()
-        .then(this.$router.push("/"));
+        .then(this.$emit("user-logged-out"))
     }
   },
   props: ["username"]

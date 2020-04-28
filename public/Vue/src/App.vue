@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="nav">
-      <NavigationBar v-bind:username="username"/>
+      <NavigationBar v-bind:username="username" v-on:user-logged-out="logOutUser"/>
     </div>
     <router-view v-bind:username="username" v-on:user-logged-in="updateUser"/>
   </div>
@@ -24,7 +24,6 @@
       updateUser() {
         Parse.initialize("nanoblogo");
         Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        localStorage.removeItem("Parse/nanoblogo/currentUser");
         let waitForUser = setInterval(
           () => {
             let currentUser = localStorage.getItem("Parse/nanoblogo/currentUser");
@@ -35,8 +34,12 @@
           }, 100);
         function stopWaitingForUser() {
           clearInterval(waitForUser)
+          this.username = "";
         }
         setTimeout(stopWaitingForUser, 2000);
+      },
+      logOutUser() {
+      this.username = "";
       }
     },
     created() {

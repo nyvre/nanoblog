@@ -4,9 +4,12 @@
       <textarea type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
       <input type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
     </div>
-    <div v-bind:key='post.objectId' v-for='post in posts' id='post' name='post' class='chat'>
+    <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
       <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}}</p>  
       <p class='messagebox'>{{post.body}}</p>
+      <p> {{post.comments}} </p>
+      <textarea type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
+      <input type="submit" v-on:click="addComment(post.objectId)" class="add-comment-btn" style="color:green;background:#ffffe6;border-radius:10px" >
       <br>
       <div v-if="username === post.author">
         <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">
@@ -37,14 +40,21 @@
         });
       },
       formatPosts (posts) {
+        var self = this;
         return new Promise(function(resolve) {
           let postsFormated = [];
           for (let post of posts) {
-            postsFormated.push({
-              "objectId": post.id, 
-              "author": post.get("author").get("username"), 
-              "body":  post.get("body"), 
-              "createdAt": post.get("createdAt")
+            self.getAndFormatComments(post.id)
+            .then((comments) => {
+              console.log(post.id);
+              console.log(comments);
+              postsFormated.push({
+                "objectId": post.id, 
+                "author": post.get("author").get("username"), 
+                "body": post.get("body"), 
+                "comments": comments,
+                "createdAt": post.get("createdAt")
+              })
             })
           }
           return resolve(postsFormated);
@@ -59,6 +69,62 @@
             })
           )
         });
+      },
+      getComments (postId) {
+        return new Promise(function (resolve) {
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var Comment = new Parse.Query("Comment");
+          var Post = Parse.Object.extend('posts');
+          Comment.equalTo("parentPost", new Post({id : postId}));
+          Comment.ascending("createdAt");
+          Comment.include("author");
+          return resolve(Comment.find());
+        });
+      },
+      formatComments (comments) {
+        return new Promise(function(resolve) {
+          let commentsFormated = [];
+          for (let comment of comments) {
+            commentsFormated.push({
+              "objectId": comment.id, 
+              "author": comment.get("author").get("username"), 
+              "body": comment.get("body"), 
+              "createdAt": comment.get("createdAt")
+            })
+          }
+          return resolve(commentsFormated);
+        });
+      },
+      getAndFormatComments(postId) {
+        var self = this;
+        return new Promise(function(resolve) {
+          return resolve(self.getComments(postId)
+            .then(function (comments) {
+              return self.formatComments(comments)
+            })
+          )
+        });
+      },
+      addCommentToDatabase(body, parentPostId) {
+        return new Promise(function(resolve) {
+          console.log(parentPostId);
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var Comment = Parse.Object.extend("Comment");
+          var Post = Parse.Object.extend("posts");
+          let comment = new Comment();
+          comment.set("body", body);
+          comment.set("author", Parse.User.current());
+          comment.set("parentPost", new Post({id : parentPostId}));
+          return(resolve(comment.save()));
+        });
+      },
+      addComment (parentPostId) {
+        let comment = document.getElementById(parentPostId + "-comment");
+        let commentBody = comment.value;
+        comment.value = "";
+        this.addCommentToDatabase(commentBody, parentPostId).then(() => {this.populatePostsData()});
       },
       populatePostsData () {
         this.getAndFormatPosts()
@@ -104,7 +170,7 @@
     },
     mounted () {
       this.populatePostsData();
-      this.checkForNewPosts();
+      //this.checkForNewPosts();
     },
   }
 </script>

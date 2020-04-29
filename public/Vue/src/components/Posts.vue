@@ -8,9 +8,11 @@
     <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
       <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: {{post.points}} <input v-if="username!=''" type="submit" v-on:click="addPoint(post.objectId)" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px" value="+"></p>
       <p class='messagebox' >{{post.body}}</p>
-      <p> {{comments[post.objectId]}} </p>
+      <p> (SCHOWANE KOMENTARZE) {{comments[post.objectId]}} </p>
+      <p v-if="comments[post.objectId]">Ilość komnentarzy: {{comments[post.objectId].length}} (TUTAJ POWINIEN POJAWIĆ SIĘ PRZYCISK KTÓRY ROZWINIE KOMENTARZE)</p>
+      <p v-else></p>
       <textarea v-if="username!=''" type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
-      <input v-if="username!=''" type="submit" v-on:click="addComment(post.objectId)" class="add-comment-btn" style="color:green;background:#ffffe6;border-radius:10px" >
+      <input v-if="username!=''" type="submit" v-on:click="addComment(post.objectId)" class="add-comment- btn" style="color:green;background:#ffffe6;border-radius:10px" >
       <br>
       <div v-if="username === post.author">
         <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">

@@ -6,11 +6,12 @@
       <input v-if="username!=''" type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
     </div>
     <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
-      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: {{post.points}} <input v-if="username!=''" type="submit" v-on:click="addPoint(post.objectId)" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px" value="+"></p>
+      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: <span v-if="points[post.objectId]"> {{points[post.objectId].length}} </span> <span v-else>0</span> 
+      <input v-if="username!=''" type="submit" v-on:click="addPoint(post.objectId)" :id="post.objectId + '-point-btn'" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px;visibility:visible" value="+"></p>
       <p class='messagebox' >{{post.body}}</p>
       <p> (SCHOWANE KOMENTARZE) {{comments[post.objectId]}} </p>
       <p v-if="comments[post.objectId]">Ilość komnentarzy: {{comments[post.objectId].length}} (TUTAJ POWINIEN POJAWIĆ SIĘ PRZYCISK KTÓRY ROZWINIE KOMENTARZE)</p>
-      <p v-else></p>
+      <p v-else>Ilość komentarzy: 0</p>
       <textarea v-if="username!=''" type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
       <input v-if="username!=''" type="submit" v-on:click="addComment(post.objectId)" class="add-comment- btn" style="color:green;background:#ffffe6;border-radius:10px" >
       <br>
@@ -28,7 +29,9 @@
     data: function() {
       return {
         posts: [],
-        comments: []
+        comments: [],
+        points: [],
+        userLikedPosts: [],
       }
     },
     props: ["username"],
@@ -83,9 +86,7 @@
           let commentsFormated = {};
           for (let comment of comments) {
             let key = comment.get("parentPost").id;
-            console.log(key);
             if (commentsFormated[key]) {
-              console.log(commentsFormated[key]);
               commentsFormated[key].push({
                 "objectId": comment.id, 
                 "author": comment.get("author").get("username"), 
@@ -101,7 +102,6 @@
               }]
             }
           }
-          console.log("koniec" + commentsFormated);
           return resolve(commentsFormated);
         });
       },
@@ -135,40 +135,79 @@
         this.addCommentToDatabase(commentBody, parentPostId)
           .then(() => {this.populateCommentsData()});
       },
-      getPoints (postId) {
+      getPoints () {
         return new Promise(function (resolve) {
+          console.log("getPoints()");
           Parse.initialize("nanoblogo");
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
           var Point = new Parse.Query("Point");
-          var Post = Parse.Object.extend('posts');
-          Point.equalTo("parentPost", new Post({id : postId}));
-          return resolve(Point.count());
+          Point.include("author");
+          Point.include("parentPost");
+          resolve(Point.find());
         });
       },
-      addPoint (parentPostId) {
+      formatPoints (points) {
+        return new Promise(function(resolve) {
+          console.log("formatPoints()");
+          let pointsFormated = {};
+          for (let point of points) {
+            let key = point.get("parentPost").id;
+            if (pointsFormated[key]) {
+              pointsFormated[key].push({
+                "objectId": point.id, 
+                "author": point.get("author").get("username"), 
+              })
+            } else {
+              pointsFormated[key] = [{
+                "objectId": point.id, 
+                "author": point.get("author").get("username"), 
+              }]
+            }
+          }
+          resolve(pointsFormated);
+        });
+      },
+      getAndFormatPoints() {
+        var self = this;
+        return new Promise(function(resolve) {
+          resolve(self.getPoints()
+            .then(function (points) {
+               self.formatPoints(points)
+            })
+          )
+        });
+      },
+      addPointToDatabase (parentPostId) {
+        console.log("addPointToDatabase()");
         return new Promise(function (resolve) {
           Parse.initialize("nanoblogo");
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
           var Point = Parse.Object.extend("Point");
           var Post = Parse.Object.extend("posts");
-          //var User = Parse.Object.extend("User");
           let point = new Point();
           point.set("author", Parse.User.current());
           point.set("parentPost", new Post({id : parentPostId}));
-          return(resolve(point.save()));
+          resolve(point.save());
         });
       },
       populatePostsData () {
         this.getAndFormatPosts()
           .then((retrieviedPosts) => {
             this.posts = retrieviedPosts.reverse();
-          })
+          }).then(() => {
+            return this.getUserLikedPosts()
+          }).then(userLikedPosts => this.disableAlreadyLikedPosts(userLikedPosts));
       },
-      populateCommentsData() {
+      populateCommentsData () {
         this.getAndFormatComments()
           .then((retrieviedComments) => {
             this.comments = retrieviedComments;
           })
+      },
+      populatePointsData () {
+        this.getPoints()
+          .then((points) => this.formatPoints(points))
+          .then((retrieviedPoints) => this.points = retrieviedPoints);
       },
       addPostToDatabase(body) {
         return new Promise(function(resolve) {
@@ -188,6 +227,20 @@
         this.addPostToDatabase(postBody)
           .then(() => {this.populatePostsData()});
       },
+      addPoint (parentPostId) {   
+      var self = this; 
+      let likeButton = document.getElementById(parentPostId + '-point-btn');
+      likeButton.disabled = true;
+      likeButton.style.background = "#00ff00";
+      this.getPoints().then(function (points) {
+          return self.formatPoints(points)
+        }).then(function (retrieviedPoints) {
+          self.points = retrieviedPoints;
+          return self.addPointToDatabase(parentPostId)
+        }).then(function () {
+          return self.populatePointsData()
+        })
+      },
       deletePost(objectId) {
         Parse.initialize("nanoblogo");
         Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
@@ -205,11 +258,37 @@
       },
       checkForNewPosts () {
         setInterval(this.populateCommentsData, 10000);
+      },
+      getUserLikedPosts() {
+        return new Promise(function (resolve) {
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var Point = new Parse.Query("Point");
+          Point.include("author");
+          Point.include("parentPost");
+          let sessionToken = localStorage.getItem("Parse/nanoblogo/currentUser");
+          let sessionTokenParsed = JSON.parse(sessionToken);
+          let userId = sessionTokenParsed.objectId;
+          Point.equalTo('author', { "__type": "Pointer", "className": "_User", "objectId": userId});
+          resolve(Point.find())
+        })
+      },
+      disableAlreadyLikedPosts (userLikedPosts) {
+        for (let likedPost of userLikedPosts) {
+          console.log(likedPost.get("parentPost"));
+          let likeButton = document.getElementById(likedPost.get("parentPost").id + '-point-btn');
+          if (likeButton) {
+            console.log("mehere");
+            likeButton.disabled = true;
+            likeButton.style.background = "#00ff00";
+          }
+        }
       }
     },
     mounted () {
-      this.populatePostsData();
+      this.populatePostsData()
       this.populateCommentsData();
+      this.populatePointsData();
       this.checkForNewPosts();
     },
   }

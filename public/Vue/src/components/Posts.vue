@@ -137,7 +137,6 @@
       },
       getPoints () {
         return new Promise(function (resolve) {
-          console.log("getPoints()");
           Parse.initialize("nanoblogo");
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
           var Point = new Parse.Query("Point");
@@ -148,7 +147,6 @@
       },
       formatPoints (points) {
         return new Promise(function(resolve) {
-          console.log("formatPoints()");
           let pointsFormated = {};
           for (let point of points) {
             let key = point.get("parentPost").id;
@@ -178,7 +176,6 @@
         });
       },
       addPointToDatabase (parentPostId) {
-        console.log("addPointToDatabase()");
         return new Promise(function (resolve) {
           Parse.initialize("nanoblogo");
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
@@ -256,7 +253,7 @@
             this.populatePostsData()
           });
       },
-      checkForNewPosts () {
+      checkForNewComments () {
         setInterval(this.populateCommentsData, 10000);
       },
       getUserLikedPosts() {
@@ -275,10 +272,8 @@
       },
       disableAlreadyLikedPosts (userLikedPosts) {
         for (let likedPost of userLikedPosts) {
-          console.log(likedPost.get("parentPost"));
           let likeButton = document.getElementById(likedPost.get("parentPost").id + '-point-btn');
           if (likeButton) {
-            console.log("mehere");
             likeButton.disabled = true;
             likeButton.style.background = "#00ff00";
           }
@@ -289,7 +284,7 @@
       this.populatePostsData()
       this.populateCommentsData();
       this.populatePointsData();
-      this.checkForNewPosts();
+      this.checkForNewComments();
     },
   }
 </script>

@@ -1,22 +1,87 @@
 <template>
   <div>
-    <div style='bottom:0px;align-items:center;display: flex;justify-content: center;'>
-      <a v-if="username!=''" id="currentUser"><li> Cześć, {{username}}</li></a>
-      <input v-if="username!=''" placeholder= "Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!" type="text" id="post-body" name="post-body" class='textbox' wrap="soft" />
-      <input v-if="username!=''" type="submit" v-on:click="addPost" class="add-post-btn" style="color:green;background:#ffffe6;border-radius:10px" > 
+    <div style="bottom:0px;align-items:center;display: flex;justify-content: center;">
+      <div></div>
+      <a v-if="username!=''" id="currentUser">
+        <h1 style="margin:50px;margin-left:0;color:green;">Cześć, {{username}}</h1>
+      </a>
+      <input
+        style="margin-left:0px;margin-right:50px;max-width:60%"
+        v-if="username!=''"
+        placeholder="Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!"
+        type="text"
+        id="post-body"
+        name="post-body"
+        class="textbox"
+        wrap="soft"
+      />
+      <input
+        v-if="username!=''"
+        type="submit"
+        v-on:click="addPost"
+        class="add-post-btn"
+        style="color:white;background:green;border-radius:10px;padding:7px 10px"
+      />
     </div>
-    <div v-bind:key='post.objectId' v-for='post in posts' :id='post.objectId' name='post' class='chat'>
-      <p class='chatinfo'> <span class='author'>{{post.author}}</span> {{post.createdAt}} Points: <span v-if="points[post.objectId]"> {{points[post.objectId].length}} </span> <span v-else>0</span> 
-      <input v-if="username!=''" type="submit" v-on:click="addPoint(post.objectId)" :id="post.objectId + '-point-btn'" class="add-point-btn" style="color:green;background:#ffffe6;border-radius:10px;visibility:visible" value="+"></p>
-      <p class='messagebox' >{{post.body}}</p>
-      <p> (SCHOWANE KOMENTARZE) {{comments[post.objectId]}} </p>
-      <p v-if="comments[post.objectId]">Ilość komnentarzy: {{comments[post.objectId].length}} (TUTAJ POWINIEN POJAWIĆ SIĘ PRZYCISK KTÓRY ROZWINIE KOMENTARZE)</p>
+    <div
+      v-bind:key="post.objectId"
+      v-for="post in posts"
+      :id="post.objectId"
+      name="post"
+      class="chat"
+    >
+      <p class="chatinfo">
+        <span class="author">{{post.author}}</span>
+        {{post.createdAt}} Points:
+        <span
+          v-if="points[post.objectId]"
+        >{{points[post.objectId].length}}</span>
+        <span v-else>0</span>
+        <input
+          v-if="username!=''"
+          type="submit"
+          v-on:click="addPoint(post.objectId)"
+          :id="post.objectId + '-point-btn'"
+          class="add-point-btn"
+          style="color:green;background:#ffffe6;border-radius:10px;visibility:visible;padding:6px;margin-left:10px"
+          value="+"
+        />
+      </p>
+      <p class="messagebox">{{post.body}}</p>
+      <p>(SCHOWANE KOMENTARZE) {{comments[post.objectId]}}</p>
+      <p v-if="comments[post.objectId]">
+        Ilość komnentarzy: {{comments[post.objectId].length}}
+        <button
+          type="button"
+          style="color:white;background:blue;border-radius:10px;padding:1px 10px"
+        >Pokaz komentarze</button>
+      </p>
       <p v-else>Ilość komentarzy: 0</p>
-      <textarea v-if="username!=''" type="text" :id="post.objectId + '-comment'" name="comment-body" class='textbox' wrap="soft" />
-      <input v-if="username!=''" type="submit" v-on:click="addComment(post.objectId)" class="add-comment- btn" style="color:green;background:#ffffe6;border-radius:10px" >
-      <br>
+      <textarea
+        v-if="username!=''"
+        type="text"
+        :id="post.objectId + '-comment'"
+        name="comment-body"
+        class="textbox"
+        wrap="soft"
+        style="max-width:80%;margin-left:100px"
+      />
+      <input
+        v-if="username!=''"
+        type="submit"
+        v-on:click="addComment(post.objectId)"
+        class="add-comment- btn"
+        style="color:white;background:green;border-radius:10px;padding:7px 10px"
+      />
+      <br />
       <div v-if="username === post.author">
-        <input type="submit" value="Usun post" :id=post.objectId v-on:click="deletePost(post.objectId)">
+        <input
+          type="submit"
+          value="Usun post"
+          :id="post.objectId"
+          v-on:click="deletePost(post.objectId)"
+          style="color:white;background:orange;border-radius:10px;padding:7px 10px"
+        />
       </div>
     </div>
   </div>
@@ -42,7 +107,7 @@
           Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
           var allPosts = new Parse.Query("posts");
           allPosts.ascending("createdAt");
-          allPosts.include("author");
+          allPosts.include("author"); 
           return resolve(allPosts.find());
         });
       },

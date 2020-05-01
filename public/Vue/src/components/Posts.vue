@@ -245,12 +245,39 @@
         var query = new Parse.Query(Post);
         query.get(objectId)
           .then((post) => {
-            post.destroy()
-              .then(this.populatePostsData());
+            new Promise((resolve) => resolve(this.deleteCorrespondingComments(objectId)))
+              .then(() => this.deleteCorrespondingPoints(objectId))
+              .then(() => post.destroy())
+              .then(() => this.populatePostsData());
             alert("Post został usunięty");
             },() => {
             alert("Post nie istnieje");
             this.populatePostsData()
+          });
+      },
+      deleteCorrespondingComments(parentPostId) {
+        Parse.initialize("nanoblogo");
+        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+        var Comment = new Parse.Query("Comment");
+        Comment.equalTo('parentPost', { "__type": "Pointer", "className": "posts", "objectId": parentPostId});
+        Comment.find()
+          .then((comments) => {
+            for (let comment of comments) {
+              comment.destroy();
+            }
+          });
+      },
+      deleteCorrespondingPoints(parentPostId) {
+        Parse.initialize("nanoblogo");
+        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+        var Point = new Parse.Query("Point");
+        Point.include("parentPost");
+        Point.equalTo('parentPost', { "__type": "Pointer", "className": "posts", "objectId": parentPostId});
+        Point.find()
+          .then((points) => {
+            for (let point of points) {
+              point.destroy();
+            }
           });
       },
       checkForNewComments () {

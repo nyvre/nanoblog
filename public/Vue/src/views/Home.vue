@@ -1,6 +1,6 @@
 <template>
   <div id ="Home">
-    <Posts v-bind:username="username"/>
+    <Posts v-bind:username="username" v-bind:lastSeen="lastSeen"/>
     }
   </div>
 </template>
@@ -12,6 +12,6 @@ export default {
   components: {
     Posts
   }, 
-  props: ['username']
+  props: ['username', 'lastSeen']
 }
 </script>

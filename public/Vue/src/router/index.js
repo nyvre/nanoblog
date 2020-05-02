@@ -12,7 +12,7 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home,
-    props: {prop: "username"}
+    props: true
   },
   {
     path: '/login',

@@ -3,7 +3,7 @@
     <div id="nav">
       <NavigationBar v-bind:username="username" v-on:user-logged-out="logOutUser"/>
     </div>
-    <router-view v-bind:username="username" v-on:user-logged-in="updateUser"/>
+    <router-view v-bind:username="username" v-bind:lastSeen="lastSeen" v-on:user-logged-in="updateUser"/>
   </div>
 </template>
 
@@ -17,7 +17,8 @@
     },
     data() {
       return {
-        username: ""
+        username: "",
+        lastSeen: Date
       }
     },
     methods: {
@@ -39,11 +40,35 @@
         setTimeout(stopWaitingForUser, 2000);
       },
       logOutUser() {
-      this.username = "";
+        this.username = "";
+      },
+      getUserLastSeenTime () {
+        return new Promise (function (resolve) {
+          Parse.initialize("nanoblogo");
+          Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+          var LastSeen = new Parse.Query("LastSeen"); 
+          let sessionToken = localStorage.getItem("Parse/nanoblogo/currentUser");
+          let sessionTokenParsed = JSON.parse(sessionToken);
+          let userId = sessionTokenParsed.objectId;
+          LastSeen.equalTo('User', { "__type": "Pointer", "className": "_User", "objectId": userId});
+          resolve(LastSeen.find());
+        })
+      },
+      updateUserLastSeenTime () {
+        this.getUserLastSeenTime()
+        .then((lastSeenObject) => {
+          lastSeenObject[0].set("Date", new Date());
+          lastSeenObject[0].save();
+        })
       }
     },
     created() {
-      this.updateUser()
+      this.updateUser();
+      this.getUserLastSeenTime().
+        then(lastSeen => {
+          this.lastSeen = lastSeen[0].get("Date");
+        });
+      window.addEventListener('beforeunload', this.updateUserLastSeenTime);
     }
   }
 </script>

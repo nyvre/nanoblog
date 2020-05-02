@@ -23,6 +23,8 @@
         style="color:white;background:green;border-radius:10px;padding:7px 10px"
       />
     </div>
+    <label>Pokaż wszystkie posty <input type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> </label>
+    <label><input type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"> Pokaż nowe posty od ostatniej wizyty</label>
     <div
       v-bind:key="post.objectId"
       v-for="post in posts"
@@ -118,7 +120,8 @@ export default {
       posts: [],
       comments: [],
       points: [],
-      userLikedPosts: []
+      userLikedPosts: [],
+      newOrAllPosts: "allPosts"
     };
   },
   props: ["username", "lastSeen"],
@@ -134,15 +137,32 @@ export default {
       });
     },
     formatPosts(posts) {
+      var self = this;
       return new Promise(function(resolve) {
         let postsFormated = [];
-        for (let post of posts) {
-          postsFormated.push({
-            objectId: post.id,
-            author: post.get("author").get("username"),
-            body: post.get("body"),
-            createdAt: post.get("createdAt")
-          });
+        console.log(self.new)
+        if (self.newOrAllPosts == "newPosts") {
+          console.log("newPosts");
+          for (let post of posts) {
+            if (post.get("createdAt") > self.lastSeen) {
+              postsFormated.push({
+                objectId: post.id,
+                author: post.get("author").get("username"),
+                body: post.get("body"),
+                createdAt: post.get("createdAt")
+              });
+            }
+          }
+        } else {
+          console.log("oldPosts");
+          for (let post of posts) {
+            postsFormated.push({
+              objectId: post.id,
+              author: post.get("author").get("username"),
+              body: post.get("body"),
+              createdAt: post.get("createdAt")
+            });
+          }
         }
         return resolve(postsFormated);
       });
@@ -280,6 +300,7 @@ export default {
       });
     },
     populatePostsData() {
+      console.log("populate");
       this.getAndFormatPosts()
         .then(retrieviedPosts => {
           this.posts = retrieviedPosts.reverse();

@@ -1,18 +1,19 @@
 ---
 layout: default
 ---
-## About the project
+## Projekt NanoBlog
 
-Lorem ipsum
+Nanoblog został stworzony by połączyć innych użytkowników w formule bloga. Każdy chętny, może tam się zarejestrować i tworzyć społeczność
+oraz dzielić się swoimi przemyśleniami.  
 
-**Project key features are:**
-* Lorem ipsum
-* Lorem ipsum
-* Lorem ipsum
-* Lorem ipsum
+**Główne funkcjonalności projektu:**
+* Wyświetlanie wszystkich wpisów w kolejności od najnowszego do najstarszego
+* Wyświetlanie wpisów, nowych od ostatniej wizyty użytkownika
+* "Plusowanie" wpisów
+* Komentowanie wpisów
 
 
-## Team:
+## Członkowie zespołu:
 *   Marcin - _**Team leader**_
-*   Dominik - _**Developer**_
-*   Dominik - _**Developer**_
+*   Dominik K. - _**Developer**_
+*   Dominik G. - _**Developer**_

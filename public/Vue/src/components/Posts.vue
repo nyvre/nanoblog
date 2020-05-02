@@ -57,17 +57,13 @@
           style="color:white;background:orange;border-radius:10px;padding:7px 10px"
         />
     </p>
-      <div style="margin-left:20px;font-size:15px;max-width:50%;
-">
-        <!-- <span>użytkownik</span>
-        <p style="font-weight: bold;" class="messagebox">{{post.author}}</p>
-        <span>napisał:</span>-->
+      <div style="margin-left:20px;font-size:15px;max-width:50%;">
         <p class="messagebox" style="color:blue;font-weight: bold;">{{post.body}}</p>
       </div>
       <br />
       <div :id="post.objectId + '-comments'" style="display:none">
         <div
-          style="margin-left:35px;  border: 1px solid black;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
+          style="margin-left: 35px;border: 1px solid black;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
           class="komentarzyki"
           v-bind:key="comment.objectId"
           v-for="comment in comments[post.objectId]"
@@ -141,29 +137,31 @@ export default {
     },
     formatPosts(posts) {
       var self = this;
+      var timeNow = new Date();
       return new Promise(function(resolve) {
         let postsFormated = [];
-        console.log(self.new)
         if (self.newOrAllPosts == "newPosts") {
-          console.log("newPosts");
           for (let post of posts) {
             if (post.get("createdAt") > self.lastSeen) {
+              let elapsedTime = timeNow - post.get("createdAt");
+              let formattedElapsedTime = self.formatElapsedTime(elapsedTime);
               postsFormated.push({
                 objectId: post.id,
                 author: post.get("author").get("username"),
                 body: post.get("body"),
-                createdAt: post.get("createdAt")
+                createdAt: formattedElapsedTime
               });
             }
           }
         } else {
-          console.log("oldPosts");
           for (let post of posts) {
+            let elapsedTime = timeNow - post.get("createdAt");
+            let formattedElapsedTime = self.formatElapsedTime(elapsedTime);
             postsFormated.push({
               objectId: post.id,
               author: post.get("author").get("username"),
               body: post.get("body"),
-              createdAt: post.get("createdAt")
+              createdAt: formattedElapsedTime
             });
           }
         }
@@ -192,16 +190,20 @@ export default {
       });
     },
     formatComments(comments) {
+      var self = this;
+      var timeNow = new Date();
       return new Promise(function(resolve) {
         let commentsFormated = {};
         for (let comment of comments) {
           let key = comment.get("parentPost").id;
+          let elapsedTime = timeNow - comment.get("createdAt");
+          let formattedElapsedTime = self.formatElapsedTime(elapsedTime);
           if (commentsFormated[key]) {
             commentsFormated[key].push({
               objectId: comment.id,
               author: comment.get("author").get("username"),
               body: comment.get("body"),
-              createdAt: comment.get("createdAt")
+              createdAt: formattedElapsedTime
             });
           } else {
             commentsFormated[key] = [
@@ -209,13 +211,37 @@ export default {
                 objectId: comment.id,
                 author: comment.get("author").get("username"),
                 body: comment.get("body"),
-                createdAt: comment.get("createdAt")
+                createdAt: formattedElapsedTime
               }
             ];
           }
         }
         return resolve(commentsFormated);
       });
+    },
+    formatElapsedTime (elapsedTime) {
+      let elapsedTimeInSeconds = elapsedTime / 1000;
+      if (elapsedTimeInSeconds < 60) {
+        return Math.round(elapsedTimeInSeconds) + ' sekund temu'
+      }
+      let elapsedTimeInMinutes = elapsedTimeInSeconds / 60;
+      if (elapsedTimeInMinutes < 60) {
+        return Math.round(elapsedTimeInMinutes) + ' minut temu'
+      }
+      let elapsedTimeInHours = elapsedTimeInMinutes / 60;
+      if (elapsedTimeInHours < 24) {
+        return Math.round(elapsedTimeInHours) + ' godzin temu'
+      }
+      let elapsedTimeInDays = elapsedTimeInHours / 24;
+      if (elapsedTimeInDays < 30) {
+        return Math.round(elapsedTimeInDays) + ' dni temu'
+      }
+      let elapsedTimeInMonths = elapsedTimeInDays / 30;
+      if (elapsedTimeInMonths < 12) {
+        return Math.round(elapsedTimeInMonths) + ' miesięcy temu'
+      } 
+      let elapsedTimeInYears = elapsedTimeInDays / 12;
+      return Math.round(elapsedTimeInYears) + ' lat temu'
     },
     getAndFormatComments() {
       var self = this;

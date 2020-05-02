@@ -1,7 +1,6 @@
 <template>
   <div id ="Home">
     <Posts v-bind:username="username" v-bind:lastSeen="lastSeen"/>
-    }
   </div>
 </template>
 

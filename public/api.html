@@ -1,42 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>API</title>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/parse/2.12.0/parse.js"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Portfolio-Record</title>
+    <!-- main css -->
+    <link rel="stylesheet" href="api_style.css" />
   </head>
 
   <body>
-    <script type="text/javascript">
-      var https = require('https');
+    <div max-width="200px" max-height="200px">
+      <header class="header">
+        <!-- second shild -->
+        <section class="banner">
+          <!-- banner container -->
+          <div class="banner__container">
+            <h1 class="banner__title">Nanoblog</h1>
+            <h1 class="banner__jobs">
+              Obsługa API
+            </h1>
+          </div>
+        </section>
+      </header>
+    </div>
+    <!-- end header -->
+    <!-- about section -->
+    <section class="about">
+      <div class="about__center">
+        <article class="about-info">
+          <div class="about-info__container">
+            <h1 class="about-info__title">Nanoblog API</h1>
+            <br />
+            <h2>
+              Pobieranie danych przechowywanych w serwisie nanoblogo.herokuapp.com w formacie JSON
+            </h2>
+            <p class="about-info__text">
+              Serwis nanoblogo.herokuapp.com/api/ udostępnia publiczne Web API umożliwiające klientom HTTP wykonywanie zapytań na poniższych zbiorach danych publikowanych przez serwis nanoblogo.herokuapp.com:<br>
+              &emsp;1. Użytkowników<br>
+              &emsp;2. Postów użytkowników<br>
+              &emsp;3. Komentarzy użytkowników
+            </p>
+            <hr>
+            Komunikacja z serwisem polega na wysłaniu odpowiednio sparametryzowanego żądania HTTP GET na adres bazowy http://nanoblogo.herokuapp.com/api/.
+            <p>
+              Opis funkcji API dotyczących użytkowników
+            </p>
+            <h2>
+              Wzory zapytań o użytkowników
+            </h2>
+            <ul>
+              <li>Wszyscy użytkownicy</li>
+              <pre class="code">https://nanoblogo.herokuapp.com/api/users/</pre>
+              <li>Użytkownik o konkretnym {objectId}</li>
+              <pre class="code">https://nanoblogo.herokuapp.com/api/users/{objectId}</pre>
+            </ul>
+            <h2>
+              Wzory zapytań o klasy bazy danych
+            </h2>
+            <p> Zarówno komentarze jak i posty użytkowników przechowywane są klasach bazy danych. Standardowym zapytaniem o wszystkie elementy klasy {class} jest:</p>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/{class}</pre>
+            <p> Istnieje też możliwość zapytania o konkretny obiekt {objectId} klasy {class}. Zapytanie wygląda wtedy w następujący sposób:</p>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/{class}/{objectId}</pre>
+            <h2>
+              Przykłady zapytań
+            </h2>
+            <li>Wszyscy użytkownicy</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/users/</pre>
+            <li>Użytkownik o ID rr6RXT6XDv</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/users/rr6RXT6XDv</pre>
+            <li>Wszystkie obiekty klasy Post</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/Post/</pre>
+            <li>Obiekt o ID NspHufFgt4 klasy Post</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/Post/</pre>
+            <li>Wszystkie obiekty klasy Comment</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/Comment/</pre>
+            <li>Obiekt o ID egJ5BPKasQ klasy Comment</li>
+            <pre class="code">https://nanoblogo.herokuapp.com/api/classes/Comemnt/egJ5BPKasQ</pre>
+          </div>
+        </article>
+      </div>
+    </section>
 
-      const options = {
-        hostname: 'nanoblogo.herokuapp.com',
-        port: 8080,
-        method: 'GET',
-        path: parsePath,
-        headers: {
-        'X-Parse-Application-Id': 'nanoblogo',
-        'X-Parse-REST-API-Key': 'restApiKey',
-        },
-      } 
-
-      var req = https.request(options, function(res) {
-        console.log('STATUS: ' + res.statusCode);
-        console.log('HEADERS: ' + JSON.stringify(res.headers));
-        res.setEncoding('utf8');
-        res.on('data', function (chunk) {
-          console.log('BODY: ' + chunk);
-        });
-      });
-
-      req.on('error', function(e) {
-        console.log('problem with request: ' + e.message);
-      });
-
-      // write data to request body
-      req.write('data\n');
-      req.write('data\n');
-      req.end();
-    </script>
+    <!-- end of about section -->
+    <script src="api_script.js"></script>
   </body>
 </html>

@@ -52,22 +52,7 @@
         <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
-      <div :id="post.objectId + '-comments'" style="display:none">
-        <div
-          style="margin-left: 35px;border: 5px dotted rgba(28,110,164,0.27);
-border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
-          class="komentarzyki"
-          v-bind:key="comment.objectId"
-          v-for="comment in comments[post.objectId]"
-        >
-          <span style="font-weight: bold;">{{comment.author}}&nbsp;</span>
-          <span style="font-style: italic;">{{comment.createdAt}}</span>
-          <br />
-          <br />
-          <span style="margin-left:35px">{{comment.body}}&nbsp;</span>
-          <br />
-        </div>
-        <textarea
+      Dodaj komentarz: <textarea
           v-if="username!=''"
           type="text"
           :id="post.objectId + '-comment'"
@@ -83,6 +68,21 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           class="add-comment- btn pointer"
           style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
         />
+      <div :id="post.objectId + '-comments'" style="display:none">
+        <div
+          style="margin-left: 35px;border: 5px dotted rgba(28,110,164,0.27);
+border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
+          class="komentarzyki"
+          v-bind:key="comment.objectId"
+          v-for="comment in comments[post.objectId]"
+        >
+          <span style="font-weight: bold;">{{comment.author}}&nbsp;</span>
+          <span style="font-style: italic;">{{comment.createdAt}}</span>
+          <br />
+          <br />
+          <span style="margin-left:35px">{{comment.body}}&nbsp;</span>
+          <br />
+        </div>
         <br />
       </div>
         <p style="margin-left:15px" v-if="comments[post.objectId]">

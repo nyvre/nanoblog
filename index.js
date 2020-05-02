@@ -34,6 +34,7 @@ app.use(express.static(path.join(__dirname, '/public/assets/css')))
 app.use('/public', express.static(path.join(__dirname, '/public')));
 app.use('/js', express.static(path.join(__dirname, '/public/js/')));
 app.use('/css', express.static(path.join(__dirname, '/public/css/')));
+app.use('/img', express.static(path.join(__dirname, '/public/img/')));
 // Serve the Parse API on the /parse URL prefix
 var mountPath = process.env.PARSE_MOUNT || '/parse';
 app.use(mountPath, api);
@@ -49,7 +50,7 @@ app.get(/api\/*/, function(req, res) {
   if (req.originalUrl.substring(0, 4) === '/api') {
     if (req.originalUrl.length <= 5) {
       console.log("here");
-       res.status(200).send('Instrukcja API będzie tutaj');
+       res.sendFile(path.join(__dirname, '/public/api.html'));
     } else {
       const options = {
         hostname: 'nanoblogo.herokuapp.com',

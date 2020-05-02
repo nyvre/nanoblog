@@ -46,8 +46,17 @@
           class="add-point-btn pointer"
           style="color:green;background:#ffffe6;border-radius:10px;visibility:visible;padding:6px;margin-left:10px"
           value="+"
+        />        
+        <input
+          v-if="username === post.author"
+          class="pointer"
+          type="submit"
+          value="Usun post"
+          :id="post.objectId"
+          v-on:click="deletePost(post.objectId)"
+          style="color:white;background:orange;border-radius:10px;padding:7px 10px"
         />
-      </p>
+    </p>
       <div style="margin-left:20px;font-size:15px;max-width:50%;
 ">
         <!-- <span>użytkownik</span>
@@ -56,57 +65,51 @@
         <p class="messagebox" style="color:blue;font-weight: bold;">{{post.body}}</p>
       </div>
       <br />
-      <div
-        style="margin-left:35px;  border: 1px solid black;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
-        class="komentarzyki"
-        v-bind:key="comment.objectId"
-        v-for="comment in comments[post.objectId]"
-      >
-        <span style="font-weight: bold;">{{comment.author}}&nbsp;</span>
-        <span style="font-style: italic;">{{comment.createdAt}}</span>
-        <br />
-        <br />
-        <span style="color:blue;margin-left:35px">{{comment.body}}&nbsp;</span>
+      <div :id="post.objectId + '-comments'" style="display:none">
+        <div
+          style="margin-left:35px;  border: 1px solid black;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
+          class="komentarzyki"
+          v-bind:key="comment.objectId"
+          v-for="comment in comments[post.objectId]"
+        >
+          <span style="font-weight: bold;">{{comment.author}}&nbsp;</span>
+          <span style="font-style: italic;">{{comment.createdAt}}</span>
+          <br />
+          <br />
+          <span style="color:blue;margin-left:35px">{{comment.body}}&nbsp;</span>
+          <br />
+        </div>
+        <textarea
+          v-if="username!=''"
+          type="text"
+          :id="post.objectId + '-comment'"
+          name="comment-body"
+          class="textbox"
+          wrap="soft"
+          style="max-width:80%;margin-left:100px"
+        />
+        <input
+          v-if="username!=''"
+          type="submit"
+          v-on:click="addComment(post.objectId)"
+          class="add-comment- btn pointer"
+          style="color:white;background:green;border-radius:10px;padding:7px 10px"
+        />
         <br />
       </div>
-      <p style="margin-left:15px" v-if="comments[post.objectId]">
+        <p style="margin-left:15px" v-if="comments[post.objectId]">
         <br />
         <br />
-        Ilość komnentarzy: {{comments[post.objectId].length}}
+        Ilość komentarzy: {{comments[post.objectId].length}}
         <button
           class="pointer"
           type="button"
           style="color:white;background:blue;border-radius:10px;padding:1px 10px"
-        >Pokaz komentarze</button>
-      </p>
-      <p v-else>Ilość komentarzy: 0</p>
-      <textarea
-        v-if="username!=''"
-        type="text"
-        :id="post.objectId + '-comment'"
-        name="comment-body"
-        class="textbox"
-        wrap="soft"
-        style="max-width:80%;margin-left:100px"
-      />
-      <input
-        v-if="username!=''"
-        type="submit"
-        v-on:click="addComment(post.objectId)"
-        class="add-comment- btn pointer"
-        style="color:white;background:green;border-radius:10px;padding:7px 10px"
-      />
-      <br />
-      <div v-if="username === post.author">
-        <input
-          class="pointer"
-          type="submit"
-          value="Usun post"
-          :id="post.objectId"
-          v-on:click="deletePost(post.objectId)"
-          style="color:white;background:orange;border-radius:10px;padding:7px 10px"
-        />
-      </div>
+          v-on:click="toggleCommentsVisibility(post.objectId)"
+          :id="post.objectId + '-comments-toggle-btn'"
+        >Pokaż komentarze</button>
+       </p>
+       <p v-else>Ilość komentarzy: 0</p>
     </div>
   </div>
 </template>
@@ -438,6 +441,17 @@ export default {
           likeButton.disabled = true;
           likeButton.style.background = "#00ff00";
         }
+      }
+    },
+    toggleCommentsVisibility(objectId) {
+      let commentsBlock = document.getElementById(objectId + '-comments');
+      let toggleButton = document.getElementById(objectId + '-comments-toggle-btn')
+      if (commentsBlock.style.display === "none") {
+        commentsBlock.style.display = "block"
+        toggleButton.innerHTML = "Ukryj komentarze"
+      } else {
+        commentsBlock.style.display = "none";
+        toggleButton.innerHTML = "Pokaż komentarze"
       }
     }
   },

@@ -1,9 +1,9 @@
 <template>
   <div>
     <div style="bottom:0px;align-items:center;display: flex;justify-content: center;">
-      <div></div>
+      
       <a v-if="username!=''" id="currentUser">
-        <h1 style="margin:50px;margin-left:0;color:green;">Cześć, {{username}}</h1>
+        <h1 style="margin:50px;margin-left:0;color:#006666;">Cześć, {{username}}</h1>
       </a>
       <input
         style="margin-left:0px;margin-right:50px;max-width:60%"
@@ -20,22 +20,22 @@
         type="submit"
         v-on:click="addPost"
         class="add-post-btn pointer"
-        style="color:white;background:green;border-radius:10px;padding:7px 10px"
+        style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
       />
     </div>
-    <label>Pokaż wszystkie posty <input type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> </label>
-    <label><input type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"> Pokaż nowe posty od ostatniej wizyty</label>
-    <div
+    <div align = 'center' ><label>Wszystkie posty <input type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> </label>
+    <label><input type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()">Od ostatniej wizyty</label>
+    </div><div
       v-bind:key="post.objectId"
       v-for="post in posts"
       :id="post.objectId"
       name="post"
       class="chat"
     >
-      <p style="font-size:15px" class="chatinfo">
-        <span class="author">{{post.author}}</span>
-        {{post.createdAt}}
-        <span style="font-weight: bold;">Points:</span>
+      <p class="chatinfo">
+        <span text-align='left'><span class="author" float='left'>{{post.author}}</span>
+        {{post.createdAt}}</span>
+        <span text-align ='right'><span style="font-weight: bold;">Points: </span>
         <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
         <span v-else>0</span>
         <input
@@ -43,27 +43,19 @@
           type="submit"
           v-on:click="addPoint(post.objectId)"
           :id="post.objectId + '-point-btn'"
-          class="add-point-btn pointer"
-          style="color:green;background:#ffffe6;border-radius:10px;visibility:visible;padding:6px;margin-left:10px"
+          class="add-point-btn"
           value="+"
-        />        
-        <input
-          v-if="username === post.author"
-          class="pointer"
-          type="submit"
-          value="Usun post"
-          :id="post.objectId"
-          v-on:click="deletePost(post.objectId)"
-          style="color:white;background:orange;border-radius:10px;padding:7px 10px"
-        />
+        /></span>        
+
     </p>
       <div style="margin-left:20px;font-size:15px;max-width:50%;">
-        <p class="messagebox" style="color:blue;font-weight: bold;">{{post.body}}</p>
+        <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
       <div :id="post.objectId + '-comments'" style="display:none">
         <div
-          style="margin-left: 35px;border: 1px solid black;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
+          style="margin-left: 35px;border: 5px dotted rgba(28,110,164,0.27);
+border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-right: 20px; padding-bottom: 20px;padding-left: 20px;"
           class="komentarzyki"
           v-bind:key="comment.objectId"
           v-for="comment in comments[post.objectId]"
@@ -72,7 +64,7 @@
           <span style="font-style: italic;">{{comment.createdAt}}</span>
           <br />
           <br />
-          <span style="color:blue;margin-left:35px">{{comment.body}}&nbsp;</span>
+          <span style="margin-left:35px">{{comment.body}}&nbsp;</span>
           <br />
         </div>
         <textarea
@@ -89,7 +81,7 @@
           type="submit"
           v-on:click="addComment(post.objectId)"
           class="add-comment- btn pointer"
-          style="color:white;background:green;border-radius:10px;padding:7px 10px"
+          style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
         />
         <br />
       </div>
@@ -100,12 +92,31 @@
         <button
           class="pointer"
           type="button"
-          style="color:white;background:blue;border-radius:10px;padding:1px 10px"
+          style="color:white;background:#006666;border-radius:10px;padding:1px 10px"
           v-on:click="toggleCommentsVisibility(post.objectId)"
           :id="post.objectId + '-comments-toggle-btn'"
-        >Pokaż komentarze</button>
+        >⇓</button>
+        <input
+          v-if="username === post.author"
+          class="pointer"
+          type="submit"
+          value="-"
+          :id="post.objectId"
+          v-on:click="deletePost(post.objectId)"
+          style="color:white;background:red;border-radius:10px;padding:3px 5px;align:right;"
+        />
        </p>
-       <p v-else>Ilość komentarzy: 0</p>
+       <div text-align= 'center' display= 'inline-block' v-else>Ilość komentarzy: 0        
+         <input
+          display= 'inline-block'
+          v-if="username === post.author"
+          class="pointer"
+          type="submit"
+          value="-"
+          :id="post.objectId"
+          v-on:click="deletePost(post.objectId)"
+          style="color:white;background:red;border-radius:10px;padding:3px 5px;align:right;"
+        /></div>
     </div>
   </div>
 </template>
@@ -372,7 +383,7 @@ export default {
       var self = this;
       let likeButton = document.getElementById(parentPostId + "-point-btn");
       likeButton.disabled = true;
-      likeButton.style.background = "#00ff00";
+      likeButton.style.background = "green";
       this.getPoints()
         .then(function(points) {
           return self.formatPoints(points);
@@ -465,7 +476,7 @@ export default {
         );
         if (likeButton) {
           likeButton.disabled = true;
-          likeButton.style.background = "#00ff00";
+          likeButton.style.background = "green";
         }
       }
     },
@@ -474,10 +485,10 @@ export default {
       let toggleButton = document.getElementById(objectId + '-comments-toggle-btn')
       if (commentsBlock.style.display === "none") {
         commentsBlock.style.display = "block"
-        toggleButton.innerHTML = "Ukryj komentarze"
+        toggleButton.innerHTML = "⇑"
       } else {
         commentsBlock.style.display = "none";
-        toggleButton.innerHTML = "Pokaż komentarze"
+        toggleButton.innerHTML = "⇓"
       }
     }
   },
@@ -499,12 +510,15 @@ export default {
   font-size: small;
 }
 .chatinfo {
-  font-size: small;
+  font-size: 14px;
   padding: 10px;
+  line-height: 40px;
+  text-align: center;
+  display: table;
 }
 .chat {
   margin: 50px;
-  background: #ccffcc;
+  background: #d7f3e9;
   border-radius: 5px;
   display: compact;
   padding: 20px;
@@ -532,5 +546,13 @@ export default {
 }
 .komentarzyki {
   margin: 10px;
+}
+.add-point-btn{
+color:#006666;
+cursor: pointer;
+border-radius: 15px;
+padding:5px;
+font: bold;
+vertical-align: text-bottom;
 }
 </style>

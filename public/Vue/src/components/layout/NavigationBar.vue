@@ -68,7 +68,7 @@ export default {
   display: table-cell;
   vertical-align: middle;
   font-family: "Montserrat", sans-serif;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 200;
 }
 .logo_container h1 span {
@@ -83,7 +83,7 @@ export default {
   height: 100%;
   display: table;
   float: left;
-  padding: 0px 14px;
+  padding: 0px 7px;
 }
 .navigation router-link {
   height: 100%;
@@ -105,7 +105,7 @@ export default {
   height: 100%;
   color: white;
   font-family: "Montserrat", sans-serif;
-  font-size: 15px;
+  font-size: 11px;
 }
 .navigation a:last-child {
   padding-right: 0px;

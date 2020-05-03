@@ -68,7 +68,7 @@ export default {
   display: table-cell;
   vertical-align: middle;
   font-family: "Montserrat", sans-serif;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 200;
 }
 .logo_container h1 span {

@@ -22,7 +22,10 @@
       />
     </div>
     <a v-if="username!=''" id="currentUser">
-    <p style="text-align:center;;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wiztyty?</p>
+    <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wizyty?</p>
+    </a>
+    <a v-if="username==''" id="currentUser">
+    <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">Czy chcesz wyświetlać tylko nowe posty od ostatniej wizyty?</p>
     </a>
     <div align = 'center' ><input class="toggle toggle-right" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="btn"><b>Tak</b></label><input id="toggle-on" class="toggle toggle-left" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="btn"><b>Nie</b></label>
     </div>
@@ -38,9 +41,10 @@
           <span class="author" float='left'>{{post.author}}</span>
         {{post.createdAt}}
         </span>
-        <span style='position:absolute;left:95%;top:30%;'>        
-          <span text-align='right' v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
-          <span v-else>0</span><input
+        <span >        
+          <span style='color:#006666;position:absolute;left:100%;bottom:65%;' v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
+          <span style='color:#006666;position:absolute;left:100%;bottom:65%;' v-else>0</span><input
+             style='position:absolute;left:95%;top:20%;'
             v-if="username!=''"
             type="submit"
             v-on:click="addPoint(post.objectId)"
@@ -64,8 +68,7 @@
           name="comment-body"
           class="textbox"
           wrap=''
-          style="position: absolute;background:#d7f3e9;max-width:70%;top: 20%;
- "
+          style="position: absolute;background:#d7f3e9;max-width:70%;top: 20%;"
         />
         <input
           v-if="username!=''"
@@ -112,12 +115,11 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           value="-"
           :id="post.objectId"
           v-on:click="deletePost(post.objectId)"
-          style="position:absolute;color:#d7f3e9;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+          style="position:absolute;color:#d7f3e9;background:red;border-radius:10px;padding:3px 5px;left:95%;bottom:0%"
           />
         </span>
       </div>
-      <div style="position:relative;margin-top:10px;" v-else>Ilość komentarzy: 0        
-        <span>
+      <div style="position:relative;margin-top:15px;" v-else><span>Ilość komentarzy: 0 </span>  
           <input
             display= 'inline-block'
             v-if="username === post.author"
@@ -126,9 +128,8 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
             value="-"
             :id="post.objectId"
             v-on:click="deletePost(post.objectId)"
-            style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+            style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;bottom:-20%"
             />
-        </span>
       </div>
     </div>
   </div>

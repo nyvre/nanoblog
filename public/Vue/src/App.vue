@@ -57,8 +57,18 @@
       updateUserLastSeenTime () {
         this.getUserLastSeenTime()
         .then((lastSeenObject) => {
-          lastSeenObject[0].set("Date", new Date());
-          lastSeenObject[0].save();
+          if(lastSeenObject[0]) {
+            lastSeenObject[0].set("Date", new Date());
+            lastSeenObject[0].save();
+          } else {
+            Parse.initialize("nanoblogo");
+            Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
+            var LastSeen = Parse.Object.extend("LastSeen");
+            let lastSeen = new LastSeen();
+            lastSeen.set("User", Parse.User.current());
+            lastSeen.set("Date", new Date());
+            lastSeen.save()
+          }
         })
       }
     },
@@ -66,7 +76,11 @@
       this.updateUser();
       this.getUserLastSeenTime().
         then(lastSeen => {
-          this.lastSeen = lastSeen[0].get("Date");
+          if (lastSeen[0] != undefined) {
+            this.lastSeen = lastSeen[0].get("Date");
+          } else {
+            this.lastSeen = new Date(0);
+          }
         });
       window.addEventListener('beforeunload', this.updateUserLastSeenTime);
     }

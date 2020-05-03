@@ -354,7 +354,6 @@ export default {
       });
     },
     populatePostsData() {
-      console.log("populate");
       this.getAndFormatPosts()
         .then(retrieviedPosts => {
           this.posts = retrieviedPosts.reverse();

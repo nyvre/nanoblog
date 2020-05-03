@@ -24,7 +24,7 @@
     <a v-if="username!=''" id="currentUser">
     <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wizyty?</p>
     
-    <div align = 'center' ><input class="toggle toggle-right" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="btn"><b>Tak</b></label><input id="toggle-on" class="toggle toggle-left" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="btn"><b>Nie</b></label>
+    <div class='switch' align = 'center' ><input class="switch-input" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="switch-label switch-label-off"><b>Tak</b></label><input id="toggle-on" class="switch-input" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="switch-label switch-label-on"><b>Nie</b></label>
     </div>
     </a>
     <div
@@ -577,18 +577,54 @@ font: bold;
 vertical-align: text-bottom;
 padding:3px 5px;
 }
-.btn{
-    border: 3px solid #006666;
-    display: inline-block;
-    padding: 5px;
-    position: relative;
-    text-align: center;
-    transition: background 600ms ease, color 600ms ease;
-    cursor: pointer;
+
+.switch {
+  position: relative;
+  height: 26px;
+  width: 120px;
+  margin: 20px auto;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+  
 }
-.btn:hover{
-    background: #006666;}
-input[type="radio"].toggle {
-    display: none;
+.switch-label {
+  position: relative;
+  z-index: 2;
+  float: left;
+  width: 58px;
+  line-height: 26px;
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
 }
+.switch-label:active {
+  font-weight: bold;
+}
+
+.switch-label-off {
+  padding-left: 2px;
+}
+
+.switch-label-on {
+  padding-right: 2px;
+}
+
+
+.switch-input {
+  display: none;
+  border:2px;
+}
+.switch-input:checked + .switch-label {
+  font-weight: 500%;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+
+
+
+
 </style>

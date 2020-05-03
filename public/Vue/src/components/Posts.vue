@@ -23,12 +23,10 @@
     </div>
     <a v-if="username!=''" id="currentUser">
     <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wizyty?</p>
-    </a>
-    <a v-if="username==''" id="currentUser">
-    <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">Czy chcesz wyświetlać tylko nowe posty od ostatniej wizyty?</p>
-    </a>
+    
     <div align = 'center' ><input class="toggle toggle-right" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="btn"><b>Tak</b></label><input id="toggle-on" class="toggle toggle-left" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="btn"><b>Nie</b></label>
     </div>
+    </a>
     <div
       v-bind:key="post.objectId"
       v-for="post in posts"

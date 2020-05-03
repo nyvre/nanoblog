@@ -38,8 +38,9 @@
           <span class="author" float='left'>{{post.author}}</span>
         {{post.createdAt}}
         </span>
-        <span style='position:absolute;left:95%;top:30%;text-align:right;'>        
-          <input
+        <span style='position:absolute;left:95%;top:30%;'>        
+          <span text-align='right' v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
+          <span v-else>0</span><input
             v-if="username!=''"
             type="submit"
             v-on:click="addPoint(post.objectId)"
@@ -47,8 +48,7 @@
             class="add-point-btn"
             value="+"
           />
-          <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
-          <span v-else>0</span>
+          
         </span>        
 
       </div>
@@ -56,7 +56,7 @@
         <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
-      <div style ="position:relative;align:center">
+      <div style ="align:center;position: relative;">
         <textarea
           v-if="username!=''"
           type="text"
@@ -64,7 +64,8 @@
           name="comment-body"
           class="textbox"
           wrap=''
-          style="background:#d7f3e9;max-width:50%;"
+          style="position: absolute;background:#d7f3e9;max-width:70%;top: 20%;
+ "
         />
         <input
           v-if="username!=''"
@@ -115,7 +116,7 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           />
         </span>
       </div>
-      <div style="position:relative" v-else>Ilość komentarzy: 0        
+      <div style="position:relative;margin-top:10px;" v-else>Ilość komentarzy: 0        
         <span>
           <input
             display= 'inline-block'

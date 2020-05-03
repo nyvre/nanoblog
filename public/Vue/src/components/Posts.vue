@@ -587,7 +587,10 @@ padding:3px 5px;
     position: relative;
     text-align: center;
     transition: background 600ms ease, color 600ms ease;
+    cursor: pointer;
 }
+.btn:hover{
+    background: #006666;}
 input[type="radio"].toggle {
     display: none;
 }

@@ -32,34 +32,35 @@
       name="post"
       class="chat"
     >
-      <p class="chatinfo">
+      <div class="chatinfo">
         <span text-align='left'><span class="author" float='left'>{{post.author}}</span>
         {{post.createdAt}}</span>
-        <span text-align ='right'><span style="font-weight: bold;">Points: </span>
-        <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
-        <span v-else>0</span>
-        <input
+        <span style='position:absolute;left:95%;top:30%;text-align:right;'>        
+          <input
           v-if="username!=''"
           type="submit"
           v-on:click="addPoint(post.objectId)"
           :id="post.objectId + '-point-btn'"
           class="add-point-btn"
           value="+"
-        /></span>        
+        />
+        <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
+        <span v-else>0</span>
+</span>        
 
-    </p>
+    </div>
       <div style="margin-left:20px;font-size:15px;max-width:50%;">
         <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
-      Dodaj komentarz: <textarea
+      <div style ="position:relative;"><span top ='50%' position = 'absolute'>Dodaj komentarz: </span><textarea
           v-if="username!=''"
           type="text"
           :id="post.objectId + '-comment'"
           name="comment-body"
           class="textbox"
           wrap="soft"
-          style="max-width:80%;margin-left:100px"
+          style="max-width:60%;top: 50%;"
         />
         <input
           v-if="username!=''"
@@ -67,7 +68,7 @@
           v-on:click="addComment(post.objectId)"
           class="add-comment- btn pointer"
           style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
-        />
+        /></div>
       <div :id="post.objectId + '-comments'" style="display:none">
         <div
           style="margin-left: 35px;border: 5px dotted rgba(28,110,164,0.27);
@@ -85,29 +86,29 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
         </div>
         <br />
       </div>
-        <p style="margin-left:15px" v-if="comments[post.objectId]">
+        <div style="position:relative" v-if="comments[post.objectId]">
         <br />
         <br />
         Ilość komentarzy: {{comments[post.objectId].length}}
         <button
           class="pointer"
           type="button"
-          style="color:white;background:#006666;border-radius:10px;padding:1px 10px"
+          style="position:absolute;color:white;background:#006666;border-radius:10px;padding:1px 10px;left:50%;width:100px;"
           v-on:click="toggleCommentsVisibility(post.objectId)"
           :id="post.objectId + '-comments-toggle-btn'"
         >⇓</button>
-        <input
+        <span><input
           v-if="username === post.author"
           class="pointer"
           type="submit"
           value="-"
           :id="post.objectId"
           v-on:click="deletePost(post.objectId)"
-          style="color:white;background:red;border-radius:10px;padding:3px 5px;align:right;"
-        />
-       </p>
-       <div text-align= 'center' display= 'inline-block' v-else>Ilość komentarzy: 0        
-         <input
+          style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+        /></span>
+       </div>
+       <div style="position:relative" v-else>Ilość komentarzy: 0        
+         <span><input
           display= 'inline-block'
           v-if="username === post.author"
           class="pointer"
@@ -115,8 +116,8 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           value="-"
           :id="post.objectId"
           v-on:click="deletePost(post.objectId)"
-          style="color:white;background:red;border-radius:10px;padding:3px 5px;align:right;"
-        /></div>
+          style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+        /></span></div>
     </div>
   </div>
 </template>
@@ -513,8 +514,8 @@ export default {
   font-size: 14px;
   padding: 10px;
   line-height: 40px;
-  text-align: center;
-  display: table;
+  display: block;
+  position:relative;
 }
 .chat {
   margin: 50px;
@@ -526,7 +527,8 @@ export default {
   font-size: small;
 }
 .textbox {
-  margin: 50px;
+  margin-left: 50px;
+  margin-right: 50px;
   height: 20px;
   border: 1px solid #888;
   font-size: 16px;
@@ -554,5 +556,6 @@ border-radius: 15px;
 padding:5px;
 font: bold;
 vertical-align: text-bottom;
+padding:3px 5px;
 }
 </style>

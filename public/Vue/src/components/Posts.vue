@@ -1,7 +1,6 @@
 <template>
   <div>
     <div style="bottom:0px;align-items:center;display: flex;justify-content: center;">
-      
       <a v-if="username!=''" id="currentUser">
         <h1 style="margin:50px;margin-left:0;color:#006666;">Cześć, {{username}}</h1>
       </a>
@@ -21,11 +20,13 @@
         v-on:click="addPost"
         class="add-post-btn pointer"
         style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
+        value="Dodaj post"
       />
     </div>
     <div align = 'center' ><label>Wszystkie posty <input type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> </label>
     <label><input type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()">Od ostatniej wizyty</label>
-    </div><div
+    </div>
+    <div
       v-bind:key="post.objectId"
       v-for="post in posts"
       :id="post.objectId"
@@ -33,34 +34,37 @@
       class="chat"
     >
       <div class="chatinfo">
-        <span text-align='left'><span class="author" float='left'>{{post.author}}</span>
-        {{post.createdAt}}</span>
+        <span text-align='left'>
+          <span class="author" float='left'>{{post.author}}</span>
+        {{post.createdAt}}
+        </span>
         <span style='position:absolute;left:95%;top:30%;text-align:right;'>        
           <input
-          v-if="username!=''"
-          type="submit"
-          v-on:click="addPoint(post.objectId)"
-          :id="post.objectId + '-point-btn'"
-          class="add-point-btn"
-          value="+"
-        />
-        <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
-        <span v-else>0</span>
-</span>        
+            v-if="username!=''"
+            type="submit"
+            v-on:click="addPoint(post.objectId)"
+            :id="post.objectId + '-point-btn'"
+            class="add-point-btn"
+            value="+"
+          />
+          <span v-if="points[post.objectId]">{{points[post.objectId].length}}</span>
+          <span v-else>0</span>
+        </span>        
 
-    </div>
+      </div>
       <div style="margin-left:20px;font-size:15px;max-width:50%;">
         <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
-      <div style ="position:relative;"><span top ='50%' position = 'absolute'>Dodaj komentarz: </span><textarea
+      <div style ="position:relative;">
+        <textarea
           v-if="username!=''"
           type="text"
           :id="post.objectId + '-comment'"
           name="comment-body"
           class="textbox"
           wrap="soft"
-          style="max-width:60%;top: 50%;"
+          style="max-width:70%;top: 50%;"
         />
         <input
           v-if="username!=''"
@@ -68,7 +72,9 @@
           v-on:click="addComment(post.objectId)"
           class="add-comment- btn pointer"
           style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
-        /></div>
+          value="Dodaj komentarz"
+        />
+      </div>
       <div :id="post.objectId + '-comments'" style="display:none">
         <div
           style="margin-left: 35px;border: 5px dotted rgba(28,110,164,0.27);
@@ -86,7 +92,7 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
         </div>
         <br />
       </div>
-        <div style="position:relative" v-if="comments[post.objectId]">
+      <div style="position:relative" v-if="comments[post.objectId]">
         <br />
         <br />
         Ilość komentarzy: {{comments[post.objectId].length}}
@@ -97,7 +103,8 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           v-on:click="toggleCommentsVisibility(post.objectId)"
           :id="post.objectId + '-comments-toggle-btn'"
         >⇓</button>
-        <span><input
+        <span>
+          <input
           v-if="username === post.author"
           class="pointer"
           type="submit"
@@ -105,19 +112,23 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           :id="post.objectId"
           v-on:click="deletePost(post.objectId)"
           style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
-        /></span>
-       </div>
-       <div style="position:relative" v-else>Ilość komentarzy: 0        
-         <span><input
-          display= 'inline-block'
-          v-if="username === post.author"
-          class="pointer"
-          type="submit"
-          value="-"
-          :id="post.objectId"
-          v-on:click="deletePost(post.objectId)"
-          style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
-        /></span></div>
+          />
+        </span>
+      </div>
+      <div style="position:relative" v-else>Ilość komentarzy: 0        
+        <span>
+          <input
+            display= 'inline-block'
+            v-if="username === post.author"
+            class="pointer"
+            type="submit"
+            value="-"
+            :id="post.objectId"
+            v-on:click="deletePost(post.objectId)"
+            style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+            />
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -518,13 +529,25 @@ export default {
   position:relative;
 }
 .chat {
-  margin: 50px;
+  max-width: 50vw;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: auto;
+  margin-right: auto;
   background: #d7f3e9;
   border-radius: 5px;
   display: compact;
   padding: 20px;
   font-weight: lighter;
   font-size: small;
+}
+.delete-post {grid-area:bottom-left;}
+.show-comments {grid-area:bottom-center;}
+.count-comments {grid-area:bottom-right;}
+
+.author {
+  grid-area:top-right;
+  font-weight: bold;
 }
 .textbox {
   margin-left: 50px;
@@ -539,9 +562,6 @@ export default {
   box-shadow: inset -3px -3px 10px #eee;
   border-radius: 15px;
   resize: none;
-}
-.author {
-  font-weight: bold;
 }
 .pointer {
   cursor: pointer;

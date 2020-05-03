@@ -5,7 +5,7 @@
       <input
         style="margin-left:0px;margin-right:50px;max-width:60%; margin-top:50px;"
         v-if="username!=''"
-        placeholder="Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!"
+        placeholder="  Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!"
         type="text"
         id="post-body"
         name="post-body"
@@ -22,7 +22,7 @@
       />
     </div>
     <a v-if="username!=''" id="currentUser">
-    <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wizyty?</p>
+    <p style="text-align:center;margin-top:50px;margin-bottom:5px;color:black;">{{username}} czy chcesz wyświetlać posty od ostatniej wizyty?</p>
     
     <div class='switch' align = 'center' ><input class="switch-input" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="switch-label switch-label-off"><b>Tak</b></label><input id="toggle-on" class="switch-input" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="switch-label switch-label-on"><b>Nie</b></label>
     </div>

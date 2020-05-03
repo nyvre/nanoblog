@@ -134,7 +134,8 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
 </template>
 
 <script>
-import Parse from "parse";
+import DBTool from "../assets/DB_Tool.js"
+var dbTool = new DBTool();
 export default {
   name: "Posts",
   data: function() {
@@ -148,16 +149,6 @@ export default {
   },
   props: ["username", "lastSeen"],
   methods: {
-    getPosts() {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var allPosts = new Parse.Query("posts");
-        allPosts.ascending("createdAt");
-        allPosts.include("author");
-        return resolve(allPosts.find());
-      });
-    },
     formatPosts(posts) {
       var self = this;
       var timeNow = new Date();
@@ -195,21 +186,10 @@ export default {
       var self = this;
       return new Promise(function(resolve) {
         return resolve(
-          self.getPosts().then(function(posts) {
+          dbTool.getPosts().then(function(posts) {
             return self.formatPosts(posts);
           })
         );
-      });
-    },
-    getComments() {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Comment = new Parse.Query("Comment");
-        Comment.ascending("createdAt");
-        Comment.include("author");
-        Comment.include("parentPost");
-        return resolve(Comment.find());
       });
     },
     formatComments(comments) {
@@ -270,41 +250,18 @@ export default {
       var self = this;
       return new Promise(function(resolve) {
         return resolve(
-          self.getComments().then(function(comments) {
+          dbTool.getComments().then(function(comments) {
             return self.formatComments(comments);
           })
         );
-      });
-    },
-    addCommentToDatabase(body, parentPostId) {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Comment = Parse.Object.extend("Comment");
-        var Post = Parse.Object.extend("posts");
-        let comment = new Comment();
-        comment.set("body", body);
-        comment.set("author", Parse.User.current());
-        comment.set("parentPost", new Post({ id: parentPostId }));
-        return resolve(comment.save());
       });
     },
     addComment(parentPostId) {
       let comment = document.getElementById(parentPostId + "-comment");
       let commentBody = comment.value;
       comment.value = "";
-      this.addCommentToDatabase(commentBody, parentPostId).then(() => {
+      dbTool.addCommentToDatabase(commentBody, parentPostId).then(() => {
         this.populateCommentsData();
-      });
-    },
-    getPoints() {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Point = new Parse.Query("Point");
-        Point.include("author");
-        Point.include("parentPost");
-        resolve(Point.find());
       });
     },
     formatPoints(points) {
@@ -333,22 +290,10 @@ export default {
       var self = this;
       return new Promise(function(resolve) {
         resolve(
-          self.getPoints().then(function(points) {
+          dbTool.getPoints().then(function(points) {
             self.formatPoints(points);
           })
         );
-      });
-    },
-    addPointToDatabase(parentPostId) {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Point = Parse.Object.extend("Point");
-        var Post = Parse.Object.extend("posts");
-        let point = new Point();
-        point.set("author", Parse.User.current());
-        point.set("parentPost", new Post({ id: parentPostId }));
-        resolve(point.save());
       });
     },
     populatePostsData() {
@@ -357,7 +302,7 @@ export default {
           this.posts = retrieviedPosts.reverse();
         })
         .then(() => {
-          return this.getUserLikedPosts();
+          return dbTool.getUserLikedPosts();
         })
         .then(userLikedPosts => this.disableAlreadyLikedPosts(userLikedPosts));
     },
@@ -367,26 +312,15 @@ export default {
       });
     },
     populatePointsData() {
-      this.getPoints()
+      dbTool.getPoints()
         .then(points => this.formatPoints(points))
         .then(retrieviedPoints => (this.points = retrieviedPoints));
-    },
-    addPostToDatabase(body) {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Post = Parse.Object.extend("posts");
-        let post = new Post();
-        post.set("body", body);
-        post.set("author", Parse.User.current());
-        return resolve(post.save());
-      });
     },
     addPost() {
       let post = document.getElementById("post-body");
       let postBody = post.value;
       post.value = "";
-      this.addPostToDatabase(postBody).then(() => {
+      dbTool.addPostToDatabase(postBody).then(() => {
         this.populatePostsData();
       });
     },
@@ -395,90 +329,26 @@ export default {
       let likeButton = document.getElementById(parentPostId + "-point-btn");
       likeButton.disabled = true;
       likeButton.style.background = "green";
-      this.getPoints()
+      dbTool.getPoints()
         .then(function(points) {
           return self.formatPoints(points);
         })
         .then(function(retrieviedPoints) {
           self.points = retrieviedPoints;
-          return self.addPointToDatabase(parentPostId);
+          return dbTool.addPointToDatabase(parentPostId);
         })
         .then(function() {
           return self.populatePointsData();
         });
     },
     deletePost(objectId) {
-      Parse.initialize("nanoblogo");
-      Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-      var Post = Parse.Object.extend("posts");
-      var query = new Parse.Query(Post);
-      query.get(objectId).then(
-        post => {
-          new Promise(resolve =>
-            resolve(this.deleteCorrespondingComments(objectId))
-          )
-            .then(() => this.deleteCorrespondingPoints(objectId))
-            .then(() => post.destroy())
-            .then(() => this.populatePostsData());
-          alert("Post został usunięty");
-        },
-        () => {
-          alert("Post nie istnieje");
-          this.populatePostsData();
-        }
-      );
-    },
-    deleteCorrespondingComments(parentPostId) {
-      Parse.initialize("nanoblogo");
-      Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-      var Comment = new Parse.Query("Comment");
-      Comment.equalTo("parentPost", {
-        __type: "Pointer",
-        className: "posts",
-        objectId: parentPostId
-      });
-      Comment.find().then(comments => {
-        for (let comment of comments) {
-          comment.destroy();
-        }
-      });
-    },
-    deleteCorrespondingPoints(parentPostId) {
-      Parse.initialize("nanoblogo");
-      Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-      var Point = new Parse.Query("Point");
-      Point.include("parentPost");
-      Point.equalTo("parentPost", {
-        __type: "Pointer",
-        className: "posts",
-        objectId: parentPostId
-      });
-      Point.find().then(points => {
-        for (let point of points) {
-          point.destroy();
-        }
-      });
+      dbTool.deleteCorrespondingComments(objectId)
+      .then(() => dbTool.deleteCorrespondingPoints(objectId))
+      .then(() => dbTool.deletePostFromDatabase(objectId))
+      .then(() => this.populatePostsData())
     },
     checkForNewComments() {
       setInterval(this.populateCommentsData, 10000);
-    },
-    getUserLikedPosts() {
-      return new Promise(function(resolve) {
-        Parse.initialize("nanoblogo");
-        Parse.serverURL = "https://nanoblogo.herokuapp.com/parse";
-        var Point = new Parse.Query("Point");
-        Point.include("author");
-        Point.include("parentPost");
-        let sessionToken = localStorage.getItem("Parse/nanoblogo/currentUser");
-        let sessionTokenParsed = JSON.parse(sessionToken);
-        let userId = sessionTokenParsed.objectId;
-        Point.equalTo("author", {
-          __type: "Pointer",
-          className: "_User",
-          objectId: userId
-        });
-        resolve(Point.find());
-      });
     },
     disableAlreadyLikedPosts(userLikedPosts) {
       for (let likedPost of userLikedPosts) {

@@ -41,6 +41,7 @@
       },
       logOutUser() {
         this.username = "";
+        this.updateUserLastSeenTime();
       },
       getUserLastSeenTime () {
         return new Promise (function (resolve) {

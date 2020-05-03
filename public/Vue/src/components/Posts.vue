@@ -224,28 +224,74 @@ export default {
       });
     },
     formatElapsedTime (elapsedTime) {
-      let elapsedTimeInSeconds = elapsedTime / 1000;
+      let elapsedTimeInSeconds = Math.round(elapsedTime / 1000);
       if (elapsedTimeInSeconds < 60) {
-        return Math.round(elapsedTimeInSeconds) + ' sekund temu'
+        let timeName = ""
+        if (elapsedTimeInSeconds === 1) {
+          timeName = ' sekundę'
+        } else if ("234".indexOf(elapsedTimeInSeconds.toString()[0]) !== -1) {
+          timeName = ' sekundy'
+        } else {
+          timeName = ' sekund'
+        }
+        return elapsedTimeInSeconds + timeName + ' temu'
       }
-      let elapsedTimeInMinutes = elapsedTimeInSeconds / 60;
+      let elapsedTimeInMinutes = Math.round(elapsedTimeInSeconds / 60);
       if (elapsedTimeInMinutes < 60) {
-        return Math.round(elapsedTimeInMinutes) + ' minut temu'
+        let timeName = ""
+        if (elapsedTimeInMinutes === 1) {
+          timeName = ' minutę'
+        } else if ("234".indexOf(elapsedTimeInMinutes.toString()[0]) !== -1) {
+          timeName = ' minuty'
+        } else {
+          timeName = ' minut'
+        }
+        return elapsedTimeInMinutes + timeName + ' temu'
       }
-      let elapsedTimeInHours = elapsedTimeInMinutes / 60;
+      let elapsedTimeInHours = Math.round(elapsedTimeInMinutes / 60);
       if (elapsedTimeInHours < 24) {
-        return Math.round(elapsedTimeInHours) + ' godzin temu'
+        let timeName = ""
+        if (elapsedTimeInHours === 1) {
+          timeName = ' godzinę'
+        } else if ("234".indexOf(elapsedTimeInHours.toString()[0]) !== -1) {
+          timeName = ' godziny'
+        } else {
+          timeName = ' godzin'
+        }
+        return elapsedTimeInHours + timeName + ' temu'
       }
-      let elapsedTimeInDays = elapsedTimeInHours / 24;
+      let elapsedTimeInDays = Math.round(elapsedTimeInHours / 24);
       if (elapsedTimeInDays < 30) {
-        return Math.round(elapsedTimeInDays) + ' dni temu'
+        let timeName = ""
+        if (elapsedTimeInDays === 1) {
+          timeName = ' dzień'
+        } else {
+          timeName = ' dni'
+        }
+        return elapsedTimeInDays + timeName + ' temu'
       }
-      let elapsedTimeInMonths = elapsedTimeInDays / 30;
+      let elapsedTimeInMonths = Math.round(elapsedTimeInDays / 30);
       if (elapsedTimeInMonths < 12) {
-        return Math.round(elapsedTimeInMonths) + ' miesięcy temu'
+        let timeName = ""
+        if (elapsedTimeInMonths === 1) {
+          timeName = ' miesiąc'
+        } else if ("234".indexOf(elapsedTimeInMonths.toString()[0]) !== -1) {
+          timeName = ' miesiące'
+        } else {
+          timeName = ' miesięcy'
+        }
+        return elapsedTimeInMonths + timeName + ' temu'
       } 
-      let elapsedTimeInYears = elapsedTimeInDays / 12;
-      return Math.round(elapsedTimeInYears) + ' lat temu'
+      let elapsedTimeInYears = Math.round(elapsedTimeInMonths / 12);
+      let timeName = ""
+      if (elapsedTimeInYears === 1) {
+        timeName = ' rok'
+      } else if ("234".indexOf(elapsedTimeInYears.toString()[0]) !== -1) {
+        timeName = ' lata'
+      } else {
+        timeName = ' lat'
+      }
+      return elapsedTimeInYears + timeName + ' temu'
     },
     getAndFormatComments() {
       var self = this;

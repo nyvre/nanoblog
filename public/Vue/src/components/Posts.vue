@@ -60,13 +60,14 @@
       <br />
       <div style ="align:center;position: relative;">
         <textarea
+          placeholder=" Dodaj komentarz"
           v-if="username!=''"
           type="text"
           :id="post.objectId + '-comment'"
           name="comment-body"
           class="textbox"
           wrap=''
-          style="position: absolute;background:#d7f3e9;max-width:70%;top: 20%;"
+          style="position: absolute;background:#d7f3e9;max-width:80%;top: 20%;"
         />
         <input
           v-if="username!=''"

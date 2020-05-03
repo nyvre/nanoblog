@@ -1,11 +1,9 @@
 <template>
   <div>
     <div style="bottom:0px;align-items:center;display: flex;justify-content: center;">
-      <a v-if="username!=''" id="currentUser">
-        <h1 style="margin:50px;margin-left:0;color:#006666;">Cześć, {{username}}</h1>
-      </a>
+
       <input
-        style="margin-left:0px;margin-right:50px;max-width:60%"
+        style="margin-left:0px;margin-right:50px;max-width:60%; margin-top:50px;"
         v-if="username!=''"
         placeholder="Tutaj możesz podzielić sie swoimi przemyśleniami z innymi Nanonkami!"
         type="text"
@@ -19,12 +17,14 @@
         type="submit"
         v-on:click="addPost"
         class="add-post-btn pointer"
-        style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
+        style="margin-top:50px;color:white;background:#006666;border-radius:10px;padding:7px 10px"
         value="Dodaj post"
       />
     </div>
-    <div align = 'center' ><label>Wszystkie posty <input type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> </label>
-    <label><input type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()">Od ostatniej wizyty</label>
+    <a v-if="username!=''" id="currentUser">
+    <p style="text-align:center;;margin-top:50px;margin-bottom:5px;color:black;">{{username}} Czy chcesz wyświetlać posty od ostatniej wiztyty?</p>
+    </a>
+    <div align = 'center' ><input class="toggle toggle-right" id="toggle-off" type="radio" name="postType" v-model="newOrAllPosts" value="newPosts" v-on:click="populatePostsData()"><label for="toggle-off" class="btn"><b>Tak</b></label><input id="toggle-on" class="toggle toggle-left" type="radio" name="postType" v-model="newOrAllPosts" value="allPosts" checked v-on:click="populatePostsData()"> <label for="toggle-on" class="btn"><b>Nie</b></label>
     </div>
     <div
       v-bind:key="post.objectId"
@@ -56,23 +56,23 @@
         <p class="messagebox">{{post.body}}</p>
       </div>
       <br />
-      <div style ="position:relative;">
+      <div style ="position:relative;align:center">
         <textarea
           v-if="username!=''"
           type="text"
           :id="post.objectId + '-comment'"
           name="comment-body"
           class="textbox"
-          wrap="soft"
-          style="max-width:70%;top: 50%;"
+          wrap=''
+          style="background:#d7f3e9;max-width:50%;"
         />
         <input
           v-if="username!=''"
           type="submit"
           v-on:click="addComment(post.objectId)"
           class="add-comment- btn pointer"
-          style="color:white;background:#006666;border-radius:10px;padding:7px 10px"
-          value="Dodaj komentarz"
+          style="border-color:#d7f3e9;color:black;background:#c1e0d6;border-radius:10px;padding:7px 10px"
+          value="›"
         />
       </div>
       <div :id="post.objectId + '-comments'" style="display:none">
@@ -99,7 +99,7 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
         <button
           class="pointer"
           type="button"
-          style="position:absolute;color:white;background:#006666;border-radius:10px;padding:1px 10px;left:50%;width:100px;"
+          style="border:#d7f3e9;position:absolute;color:black;background:#d7f3e9;border-radius:10px;padding:1px 10px;left:50%;width:100px;"
           v-on:click="toggleCommentsVisibility(post.objectId)"
           :id="post.objectId + '-comments-toggle-btn'"
         >⇓</button>
@@ -111,7 +111,7 @@ border-radius: 40px 40px 40px 40px;border-radius:10px;padding-top: 20px;padding-
           value="-"
           :id="post.objectId"
           v-on:click="deletePost(post.objectId)"
-          style="position:absolute;color:white;background:red;border-radius:10px;padding:3px 5px;left:95%;"
+          style="position:absolute;color:#d7f3e9;background:red;border-radius:10px;padding:3px 5px;left:95%;"
           />
         </span>
       </div>
@@ -551,7 +551,7 @@ export default {
 }
 .textbox {
   margin-left: 50px;
-  margin-right: 50px;
+  margin-right: 25px;
   height: 20px;
   border: 1px solid #888;
   font-size: 16px;
@@ -577,5 +577,16 @@ padding:5px;
 font: bold;
 vertical-align: text-bottom;
 padding:3px 5px;
+}
+.btn{
+    border: 3px solid #006666;
+    display: inline-block;
+    padding: 5px;
+    position: relative;
+    text-align: center;
+    transition: background 600ms ease, color 600ms ease;
+}
+input[type="radio"].toggle {
+    display: none;
 }
 </style>

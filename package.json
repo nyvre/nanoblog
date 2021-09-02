@@ -6,7 +6,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "parse-server": "^4.2.0",
+    "parse-server": "^4.10.3",
     "vue-persistent-state": "^0.2.1",
     "vuex": "^3.2.0"
   }
